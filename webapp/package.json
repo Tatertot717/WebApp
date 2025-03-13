@@ -23,5 +23,8 @@
     "eslint": "^9",
     "eslint-config-next": "15.2.2",
     "@eslint/eslintrc": "^3"
+  },
+  "scripts": {
+      "dev": "PORT=3000 next dev"
   }
 }

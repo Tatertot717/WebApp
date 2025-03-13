@@ -5,9 +5,11 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: test
+    image: webappimage
     container_name: WebApp
     volumes:
       - .:/home
     stdin_open: true
     tty: true
+    ports:
+      - "3000:3000"
