@@ -1,0 +1,13 @@
+name: WebApp
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: test
+    container_name: WebApp
+    volumes:
+      - .:/home
+    stdin_open: true
+    tty: true
