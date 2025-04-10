@@ -1,0 +1,1 @@
+//represents an individual poll element on /polls. Image, poll name, and list of options, with each vote count

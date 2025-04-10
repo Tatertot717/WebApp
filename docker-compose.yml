@@ -7,6 +7,8 @@ services:
       dockerfile: Dockerfile
     image: webappimage
     container_name: WebApp
+    environment:
+      - WATCHPACK_POLLING=true
     volumes:
       - .:/home
     stdin_open: true

@@ -1,0 +1,1 @@
+//massive create poll object on 4th view
