@@ -4,8 +4,19 @@ const CreatePage = () => {
     return (
         <div>
             <h2>Create a Poll</h2>
-            <p>Insert Create Poll Component/form</p>
+            <form>
+                //place the list of already made options here; each option has its own x button to remove it
+                <input type="text">Enter Field</input>
+                <button onClick={addOption}>+</button> //the + button adds another option to the poll
+                <input type="checkbox" name="multichoice">Allow multiple choices</input>
+                <input type="checkbox" name="loginreq">Require login to vote</input>
+                <input type="submit">Create Poll</input>
+            </form>
         </div>
     );
 };
+
+function addOption(){
+    
+}
 export default CreatePage;
