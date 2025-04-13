@@ -30,14 +30,14 @@ const PollsPage: React.FC = () => {
     {
       id: 2,
       image:
-        'spiderman.jpg',
+        'spiderman.png',
       title:
         'What is your favorite superhero movie?\n\n**Option A: The Avengers**\n**Option B: Spider-Man: Homecoming**\n**Option C: Black Panther**',
     },
     {
       id: 3,
       image:
-        'strange.jpg',
+        'strange.png',
       title: 'Which superpower would you choose?\n\n',
     },
   ];
