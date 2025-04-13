@@ -1,59 +1,51 @@
-
+// PollsPage.tsx
 import React from 'react';
 
-const Item = ({ item }) => (
-  <div
-    style={{
-      border: '1px solid #333',
-      borderRadius: '8px',
-      padding: '1rem',
-      margin: '0.5rem',
-      textAlign: 'center'
-    }}
-  >
-    <img
-      src={item.image}
-      alt={item.title}
-      style={{ width: '100%', maxWidth: '150px', height: 'auto', display: 'block', margin: '0 auto' }}
-    />
-    <h3>{item.title}</h3>
-  </div>
-);
 
-const ItemsList = () => {
-  const itemsData = [
+interface PollItem {
+  id: number;
+  image: string;
+  title: string;
+}
+
+const PollsPage: React.FC = () => {
+  
+  const items: PollItem[] = [
     {
       id: 1,
-      image: 'https://via.placeholder.com/150/0000FF/808080',
-      title: 'Poll Option A'
+      image: 'https://upload.wikimedia.org/wikipedia/en/8/87/Batman_DC_Comics.png',
+      title: 'Batman Option A'
     },
     {
       id: 2,
-      image: 'https://via.placeholder.com/150/FF0000/FFFFFF',
-      title: 'Poll Option B'
+      image: 'https://upload.wikimedia.org/wikipedia/en/2/22/Batman_%28The_Dark_Knight_trilogy%29.jpg',
+      title: 'Batman Option B'
     },
     {
       id: 3,
-      image: 'https://via.placeholder.com/150/00FF00/000000',
-      title: 'Poll Option C'
+      image: 'https://upload.wikimedia.org/wikipedia/en/0/0c/Batman_The_Animated_Series.png',
+      title: 'Batman Option C'
     }
   ];
 
   return (
-    <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap' }}>
-      {itemsData.map(item => (
-        <Item key={item.id} item={item} />
-      ))}
+    <div>
+      <h1>Polls go here</h1>
+      <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap' }}>
+      
+        {items.map((item: PollItem) => (
+          <div key={item.id} style={{ textAlign: 'center', margin: '1rem' }}>
+            <img
+              src={item.image}
+              alt={item.title}
+              style={{ width: '150px', height: 'auto' }}
+            />
+            <p>{item.title}</p>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
 
-
-const App = () => (
-  <div style={{ textAlign: 'center', padding: '2rem' }}>
-    <h1>List of Items</h1>
-    <ItemsList />
-  </div>
-);
-
-export default App;
+export default PollsPage;
