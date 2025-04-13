@@ -27,7 +27,7 @@ const SearchPage = () => {
 
           {loggedin && (
             <Link
-              href="/mypolls"
+              href="/polls?user=current"
               className="text-blue-400 underline hover:text-blue-600 transition duration-200"
             >
               <p>My polls</p>

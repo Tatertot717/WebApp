@@ -2,28 +2,43 @@
 "use client";
 import Navbar from "../Navbar";
 import Footer from "../Footer";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 
 const LoginPage = () => {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const tabParam = searchParams.get("tab");
+
   const [isLogin, setIsLogin] = useState(true);
+
+  // Sync tab param to tab state
+  useEffect(() => {
+    if (tabParam === "signup") {
+      setIsLogin(false);
+    } else {
+      setIsLogin(true);
+    }
+  }, [tabParam]);
+
+  // Tab switcher that updates both UI + URL
+  const handleTabSwitch = (tab: "login" | "signup") => {
+    setIsLogin(tab === "login");
+    router.push(`/login?tab=${tab}`);
+  };
 
   return (
     <div className="flex flex-col min-h-screen font-sans text-white">
-      {/* Header */}
       <Navbar />
-
-      {/* Middle Section with Background */}
+      {/* background and login card section (same as before) */}
       <div
         className="flex-1 flex items-center justify-center bg-cover bg-center bg-no-repeat relative"
         style={{ backgroundImage: "url('/splashBackground.jpg')" }}
       >
-        
-        {/* Login Card */}
         <div className="bg-neutral-900 bg-opacity-90 p-8 rounded-lg shadow-lg w-96 relative z-10">
-          {/* Tabs */}
           <div className="flex justify-around mb-6 border-b border-gray-700 pb-2">
             <button
-              onClick={() => setIsLogin(true)}
+              onClick={() => handleTabSwitch("login")}
               className={`text-sm font-semibold px-2 ${
                 isLogin
                   ? "text-white border-b-2 border-blue-500"
@@ -33,7 +48,7 @@ const LoginPage = () => {
               Login
             </button>
             <button
-              onClick={() => setIsLogin(false)}
+              onClick={() => handleTabSwitch("signup")}
               className={`text-sm font-semibold px-2 ${
                 !isLogin
                   ? "text-white border-b-2 border-blue-500"
@@ -44,7 +59,7 @@ const LoginPage = () => {
             </button>
           </div>
 
-          {/* Form */}
+          {/* Form content stays the same */}
           <form className="flex flex-col space-y-4">
             <input
               type="email"
@@ -73,7 +88,6 @@ const LoginPage = () => {
         </div>
       </div>
 
-      {/* Footer */}
       <Footer />
     </div>
   );
