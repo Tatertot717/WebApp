@@ -4,7 +4,7 @@ const CreatePage = () => {
     return (
         <div>
             <h2>Create a Poll</h2>
-            <form>
+            <form onSubmit={onSubmit}>
                 //place the list of already made options here; each option has its own x button to remove it
                 <input type="text">Enter Field</input>
                 <button onClick={addOption}>+</button> //the + button adds another option to the poll
@@ -16,7 +16,18 @@ const CreatePage = () => {
     );
 };
 
-function addOption(){
+//array of options
+let options = new Option[]; 
+
+function addOption() {
     
 }
+
+function onSubmit() {
+    console.log("New Poll:\n");
+    for(let x in options) {
+        console.log(x.text+"\n");
+    }
+}
+
 export default CreatePage;
