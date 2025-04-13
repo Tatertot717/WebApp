@@ -8,12 +8,16 @@ const Navbar = () => {
         <h1 className="text-2xl font-bold">PollsCheck</h1>
       </Link>
       <div className="space-x-4">
-        <button className="bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded text-sm font-medium">
-          Login
-        </button>
-        <button className="bg-blue-600 hover:bg-blue-500 px-4 py-2 rounded text-sm font-medium">
-          Sign Up
-        </button>
+        <Link href="/login">
+          <button className="bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded text-sm font-medium">
+            Login
+          </button>
+        </Link>
+        <Link href="/login">
+          <button className="bg-blue-600 hover:bg-blue-500 px-4 py-2 rounded text-sm font-medium">
+            Sign Up
+          </button>
+        </Link>
       </div>
     </header>
   );
