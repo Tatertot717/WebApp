@@ -34,8 +34,8 @@ const PollsPage = () => {
 
   return (
     <div
-    className="min-h-screen flex flex-col bg-gray-100 font-sans"
-      style={{ backgroundColor: "#2c2c2c", color: "#FFF", minHeight: "100vh" }
+    className="min-h-screen flex flex-col font-sans"
+      style={{ backgroundColor: "#2c2c2c"}
     }
     >
       {/* Header */}
