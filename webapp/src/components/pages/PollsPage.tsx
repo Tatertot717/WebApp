@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useState } from 'react';
+import Navbar from '../Navbar';
+import Footer from '../Footer';
 
 interface PollItem {
   id: number;
@@ -59,46 +61,7 @@ const PollsPage: React.FC = () => {
   return (
     <div style={{ backgroundColor: '#2c2c2c', color: '#FFF', minHeight: '100vh' }}>
       {/* Header */}
-      <header
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          padding: '1rem 2rem',
-          backgroundColor: '#333',
-        }}
-      >
-        <div style={{ fontWeight: 'bold', fontSize: '1.5rem' }}>PollsCheck</div>
-        <div>
-          <button
-            style={{
-              marginRight: '1rem',
-              padding: '0.5rem 1rem',
-              backgroundColor: 'transparent',
-              border: '1px solid #64ffda',
-              borderRadius: '4px',
-              color: '#64ffda',
-              cursor: 'pointer',
-              fontWeight: 'bold',
-            }}
-          >
-            log in to create a poll
-          </button>
-          <button
-            style={{
-              padding: '0.5rem 1rem',
-              backgroundColor: '#64ffda',
-              border: 'none',
-              borderRadius: '4px',
-              color: '#333',
-              cursor: 'pointer',
-              fontWeight: 'bold',
-            }}
-          >
-            sign up
-          </button>
-        </div>
-      </header>
+      <Navbar/>
 
       {/* Main Content */}
       <div style={{ padding: '2rem' }}>
@@ -303,19 +266,7 @@ const PollsPage: React.FC = () => {
       </div>
 
       {/* Footer */}
-      <footer
-        style={{
-          position: 'fixed',
-          bottom: '0',
-          left: '0',
-          padding: '1rem 2rem',
-          backgroundColor: '#333',
-          color: '#64ffda',
-          fontWeight: 'bold',
-        }}
-      >
-        PollsCheck by 4Dudes!
-      </footer>
+            <Footer/>
     </div>
   );
 };

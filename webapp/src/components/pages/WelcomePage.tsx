@@ -14,6 +14,7 @@ const WelcomePage = () => {
       <main className="flex-grow relative">
         <div className="flex flex-col items-center justify-center text-white relative mt-20">
           {/* Create A Poll Card */}
+          <Link href="/create-poll">
           <div className="absolute top-20 left-10 bg-neutral-800 p-4 rounded-md shadow-md w-64">
             <h2 className="text-lg font-semibold mb-2">Create A Poll</h2>
             <div className="bg-white text-black p-2 rounded-sm mb-2 text-sm">
@@ -26,8 +27,9 @@ const WelcomePage = () => {
               Option 2
             </div>
           </div>
-
+          </Link>
           {/* Featured Poll Card */}
+          <Link href="/polls">
           <div className="absolute top-20 right-10 bg-neutral-800 p-4 rounded-md shadow-md w-64">
             <h2 className="text-lg font-semibold mb-2">Featured Poll</h2>
             <div className="bg-white text-black p-2 rounded-sm mb-2 text-sm">
@@ -40,6 +42,7 @@ const WelcomePage = () => {
               Java
             </div>
           </div>
+          </Link>
 
           {/* Center Text */}
           <div className="flex flex-col items-center justify-center text-center z-10">
