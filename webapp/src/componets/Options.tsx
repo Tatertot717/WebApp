@@ -20,7 +20,7 @@ const Options: React.FC<OptionsProps> = ({ count, onChange }) => {
           type="text"
           placeholder={`Option ${index + 1}`}
           onChange={(e) => handleChange(index, e.target.value)}
-          className="border p-2 rounded"
+          className="border p-2 rounded shadow-lg"
         />
       ))}
     </div>
