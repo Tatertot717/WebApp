@@ -1,6 +1,6 @@
 // PollsPage.tsx
 import React from 'react';
-
+import Navbar from '../Navbar';
 
 interface PollItem {
   id: number;
@@ -30,6 +30,7 @@ const PollsPage: React.FC = () => {
 
   return (
     <div>
+      <Navbar />
       <h1>Polls go here</h1>
       <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap' }}>
       
