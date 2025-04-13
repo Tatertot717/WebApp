@@ -2,7 +2,12 @@
 
 const WelcomePage = () => {
     return (
-        <h1>Things go here</h1>
+        <div>
+            <h1>PollsCheck</h1>
+            <h4>Create polls and get feedbackfrom your community!</h4>
+            <p><a href="create poll link">Create a Poll</a> | 
+            <a href="find poll link">Find a Poll</a></p>
+        </div>
     );
 };
 export default WelcomePage;

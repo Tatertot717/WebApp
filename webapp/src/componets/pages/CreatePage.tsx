@@ -2,7 +2,10 @@
 
 const CreatePage = () => {
     return (
-        <h1>Create poll goes here</h1>
+        <div>
+            <h2>Create a Poll</h2>
+            <p>Insert Create Poll Component/form</p>
+        </div>
     );
 };
 export default CreatePage;
