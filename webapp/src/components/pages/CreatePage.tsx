@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import Options from '../Options';
 import Navbar from '../Navbar';
+import Footer from '../Footer';
 
 const CreatePage = () => {
     const [pollTitle, setPollTitle] = useState('');
@@ -53,8 +54,9 @@ const CreatePage = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gray-100 font-sans">
+        <div className="min-h-screen flex flex-col bg-gray-100 font-sans">
             <Navbar />
+            <main className='flex-grow relative'>
             <div className="flex justify-center items-center py-10 text-black">
                 <div className="w-full max-w-md bg-white p-8 rounded shadow">
                     <h2 className="text-2xl font-semibold mb-6 text-center">Create A Poll</h2>
@@ -120,7 +122,10 @@ const CreatePage = () => {
                     </form>
                 </div>
             </div>
+            </main>
+            <Footer />
         </div>
+        
     );
 };
 
