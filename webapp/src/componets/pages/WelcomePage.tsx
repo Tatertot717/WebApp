@@ -1,13 +1,64 @@
-//1st view on figma/ contains the welcome page and all subcomponets
+//1st view on figma/ contains the welcome page and all subcomponents
 
 const WelcomePage = () => {
-    return (
-        <div>
-            <h1>PollsCheck</h1>
-            <h4>Create polls and get feedbackfrom your community!</h4>
-            <p><a href="create poll link">Create a Poll</a> | 
-            <a href="find poll link">Find a Poll</a></p>
+  return (
+    <div
+      className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 text-white font-sans relative"
+      style={{ backgroundImage: "url('/splashBackground.jpg')" }}
+    >
+      {/* Header */}
+      <header className="w-full flex justify-between items-center px-10 py-4 bg-neutral-900 shadow-md z-20">
+        <h1 className="text-2xl font-bold">PollsCheck</h1>
+        <div className="space-x-4">
+          <button className="bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded text-sm font-medium">
+            Login
+          </button>
+          <button className="bg-blue-600 hover:bg-blue-500 px-4 py-2 rounded text-sm font-medium">
+            Sign Up
+          </button>
         </div>
-    );
+      </header>
+
+      {/* Body */}
+      <div className="flex flex-col items-center justify-center text-white relative mt-20">
+        {/* Create A Poll Card */}
+        <div className="absolute top-20 left-10 bg-neutral-800 p-4 rounded-md shadow-md w-64">
+          <h2 className="text-lg font-semibold mb-2">Create A Poll</h2>
+          <div className="bg-white text-black p-2 rounded-sm mb-2 text-sm">
+            Enter poll question here
+          </div>
+          <div className="bg-white text-black p-2 rounded-sm mb-2 text-sm">
+            Option 1
+          </div>
+          <div className="bg-white text-black p-2 rounded-sm text-sm">
+            Option 2
+          </div>
+        </div>
+
+        {/* Featured Poll Card */}
+        <div className="absolute top-20 right-10 bg-neutral-800 p-4 rounded-md shadow-md w-64">
+          <h2 className="text-lg font-semibold mb-2">Featured Poll</h2>
+          <div className="bg-white text-black p-2 rounded-sm mb-2 text-sm">
+            Top Programming Languages?
+          </div>
+          <div className="bg-white text-black p-2 rounded-sm mb-2 text-sm">
+            HTML/CSS/JS
+          </div>
+          <div className="bg-white text-black p-2 rounded-sm text-sm">Java</div>
+        </div>
+
+        {/* Center Text */}
+        <div className="flex flex-col items-center justify-center text-center z-10">
+          <h2 className="text-4xl font-bold mb-4 z-10 mt-20">PollsCheck</h2>
+          <p className="mb-8 z-10 text-center px-4">
+            Create polls and get feedback from your community!
+          </p>
+          <a href="/home" className="underline z-10">
+            Continue to site
+          </a>
+        </div>
+      </div>
+    </div>
+  );
 };
 export default WelcomePage;
