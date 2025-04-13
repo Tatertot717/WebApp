@@ -3,10 +3,22 @@ import React from "react";
 import Navbar from "../Navbar";
 
 const SearchPage = () => {
+    const onSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        const searchParam = new FormData(e.target as HTMLFormElement);
+        const search = searchParam.get('search');
+        
+    }
     return (
         <>
             <Navbar />
-            <h1>Search goes here</h1>
+            <form>
+                <input type="text"
+                placeholder="Enter search here"
+                name="search"></input>
+                <input type="hidden" value="./polls"></input>
+                <input type="submit" onSubmit={onSubmit}></input>
+            </form>
         </>
     );
 };
