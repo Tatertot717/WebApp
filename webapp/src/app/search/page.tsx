@@ -1,5 +1,4 @@
-//2nd and 3rd views in figma
-
+// app/search/page.tsx
 import SearchPage from "@/src/components/pages/SearchPage";
 
 export const metadata = {
@@ -7,7 +6,5 @@ export const metadata = {
 };
 
 export default function Search() {
-  return (
-    <SearchPage />
-  );
+  return <SearchPage />;
 }
