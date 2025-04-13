@@ -8,6 +8,7 @@ const CreatePage = () => {
     const [options, setOptions] = useState<string[]>(['', '']);
     const [allowMultiple, setAllowMultiple] = useState(false);
     const [requireLogin, setRequireLogin] = useState(false);
+    const [errors, setErrors] = useState<{ title?: string; options?: string }>({});
 
     const handleOptionsChange = (values: string[]) => {
         setOptions(values);
@@ -20,14 +21,35 @@ const CreatePage = () => {
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
 
+        const trimmedTitle = pollTitle.trim();
+        const nonBlankOptions = options.map(opt => opt.trim()).filter(opt => opt !== '');
+
+        const Errors: { title?: string; options?: string } = {};
+
+        if (!trimmedTitle) {
+            Errors.title = 'Poll title is required.';
+        }
+
+        if (nonBlankOptions.length < 2) {
+            Errors.options = 'At least 2 options are required.';
+        }
+
+        if (Object.keys(Errors).length > 0) {
+            setErrors(Errors);
+            return;
+        }
+
+        setErrors({});
+
         const pollData = {
-            polltitle: pollTitle.trim(),
-            options: options.filter(opt => opt.trim() !== ''),
+            polltitle: trimmedTitle,
+            options: nonBlankOptions,
             allowmultiple: allowMultiple,
             requirelogin: requireLogin,
         };
 
         console.log('Poll JSON:', pollData);
+        //MONGODB HERE, maybe need middleware to create options with count
     };
 
     return (
@@ -37,21 +59,32 @@ const CreatePage = () => {
                 <div className="w-full max-w-md bg-white p-8 rounded shadow">
                     <h2 className="text-2xl font-semibold mb-6 text-center">Create A Poll</h2>
                     <form onSubmit={handleSubmit} className="space-y-4">
-                        <input
-                            type="text"
-                            value={pollTitle}
-                            onChange={(e) => setPollTitle(e.target.value)}
-                            placeholder="Enter poll question here"
-                            className="w-full p-3 bg-gray-200 rounded focus:outline-none shadow-lg"
-                        />
-                        
-                        <Options count={options.length} onChange={handleOptionsChange} />
+                        <div>
+                            <input
+                                type="text"
+                                value={pollTitle}
+                                onChange={(e) => setPollTitle(e.target.value)}
+                                placeholder="Enter poll question here"
+                                className="w-full p-3 bg-gray-200 rounded focus:outline-none shadow-lg"
+                            />
+                            {errors.title && (
+                                <p className="text-red-500 text-sm mt-1">{errors.title}</p>
+                            )}
+                        </div>
+
+                        <div>
+                            <Options count={options.length} onChange={handleOptionsChange} />
+                            {errors.options && (
+                                <p className="text-red-500 text-sm mt-1">{errors.options}</p>
+                            )}
+                        </div>
 
                         <div className="flex justify-center">
                             <button
                                 type="button"
                                 onClick={handleAddOption}
                                 className="w-10 h-10 rounded-full bg-black text-white text-2xl flex items-center justify-center hover:scale-110 transition"
+                                aria-label="Add Option"
                             >
                                 +
                             </button>
