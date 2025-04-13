@@ -1,6 +1,6 @@
 //not on figma
 
-import PollsPage from "@/src/componets/pages/PollsPage";
+import PollsPage from "@/src/components/pages/PollsPage";
 
 export default function Search() {
   return (

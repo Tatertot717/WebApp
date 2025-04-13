@@ -1,6 +1,6 @@
 //4th view
 
-import CreatePage from "@/src/componets/pages/CreatePage";
+import CreatePage from "@/src/components/pages/CreatePage";
 
 export default function Search() {
   return (
