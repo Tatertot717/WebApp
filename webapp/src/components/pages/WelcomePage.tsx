@@ -1,5 +1,6 @@
 import Navbar from "../Navbar";
 import Footer from "../Footer";
+import Link from "next/link";
 
 const WelcomePage = () => {
   return (
@@ -9,7 +10,7 @@ const WelcomePage = () => {
     >
       <Navbar />
 
-      {/* Main content wrapper that grows to fill available space */}
+      {/* Main content wrapper that grows */}
       <main className="flex-grow relative">
         <div className="flex flex-col items-center justify-center text-white relative mt-20">
           {/* Create A Poll Card */}
@@ -46,9 +47,9 @@ const WelcomePage = () => {
             <p className="mb-8 z-10 text-center px-4">
               Create polls and get feedback from your community!
             </p>
-            <a href="app/polls/page.tsx" className="underline z-10">
-              Continue to site
-            </a>
+            <Link href="/search">
+              <p className="underline z-10">Continue to site</p>
+            </Link>
           </div>
         </div>
       </main>
