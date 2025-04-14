@@ -4,6 +4,7 @@ import Navbar from "../Navbar";
 import Footer from "../Footer";
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useAuth } from "@/src/config/authentication";
 
 const LoginPage = () => {
   const searchParams = useSearchParams();
@@ -11,6 +12,11 @@ const LoginPage = () => {
   const tabParam = searchParams.get("tab");
 
   const [isLogin, setIsLogin] = useState(true);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+
+  const { login } = useAuth();
 
   // Sync tab param to tab state
   useEffect(() => {
@@ -25,6 +31,18 @@ const LoginPage = () => {
   const handleTabSwitch = (tab: "login" | "signup") => {
     setIsLogin(tab === "login");
     router.push(`/login?tab=${tab}`);
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!email || !password || (!isLogin && password !== confirmPassword)) {
+      alert("Please fill out all fields correctly.");
+      return;
+    }
+
+    login();
+    router.push("/");
   };
 
   return (
@@ -60,21 +78,29 @@ const LoginPage = () => {
           </div>
 
           {/* Form content stays the same */}
-          <form className="flex flex-col space-y-4">
+          <form onSubmit={handleSubmit} className="flex flex-col space-y-4">
             <input
               type="email"
               placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               className="p-2 rounded bg-neutral-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
+
             <input
               type="password"
               placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               className="p-2 rounded bg-neutral-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
+
             {!isLogin && (
               <input
                 type="password"
                 placeholder="Confirm Password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
                 className="p-2 rounded bg-neutral-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             )}
