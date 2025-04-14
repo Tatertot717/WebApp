@@ -1,8 +1,10 @@
 "use client";
 import Link from "next/link";
 import { useAuth } from "../config/Authentication";
+import { useRouter } from 'next/navigation';
 
 const Navbar = () => {
+  const router = useRouter();
   const { isLoggedIn, logout } = useAuth();
 
   return (
@@ -13,7 +15,10 @@ const Navbar = () => {
       <div className="space-x-4">
         {isLoggedIn ? (
           <button
-            onClick={logout}
+            onClick={() => {
+              logout();
+              router.push("/");
+            }}
             className="bg-red-600 hover:bg-red-500 px-4 py-2 rounded text-sm font-medium"
           >
             Logout
