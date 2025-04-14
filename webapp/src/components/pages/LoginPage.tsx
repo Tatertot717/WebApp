@@ -4,7 +4,7 @@ import Navbar from "../Navbar";
 import Footer from "../Footer";
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useAuth } from "@/src/config/authentication";
+import { useAuth } from "@/src/config/Authentication";
 
 const LoginPage = () => {
   const searchParams = useSearchParams();

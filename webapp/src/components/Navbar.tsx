@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { useAuth } from "../config/authentication";
+import { useAuth } from "../config/Authentication";
 
 const Navbar = () => {
   const { isLoggedIn, logout } = useAuth();
