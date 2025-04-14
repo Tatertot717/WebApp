@@ -7,11 +7,12 @@ import Navbar from "../Navbar";
 import Footer from "../Footer";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/src/config/Authentication";
 
 const SearchPage = () => {
-  const loggedin = true; // update based on auth
   const [query, setQuery] = useState("");
   const router = useRouter();
+  const { isLoggedIn } = useAuth();
 
   const handleSearch = () => {
     if (query.trim()) {
@@ -20,6 +21,8 @@ const SearchPage = () => {
   };
 
   return (
+    
+
     <div className="flex flex-col min-h-screen text-white" style={{ backgroundColor: "#2c2c2c" }}>
       <Navbar />
 
@@ -40,7 +43,7 @@ const SearchPage = () => {
             </button>
           </div>
 
-          {loggedin && (
+          {isLoggedIn && (
             <Link
               href="/polls?user=current"
               className="text-blue-400 underline hover:text-blue-600 transition duration-200"

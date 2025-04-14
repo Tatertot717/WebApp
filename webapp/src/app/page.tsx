@@ -9,10 +9,6 @@ export const metadata = {
 
 
 export default function Home() {
-
-  connectMongoDB() //remove this at some point
-
-
   return (
     <WelcomePage />
   );
