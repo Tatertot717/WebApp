@@ -11,7 +11,7 @@ interface PollItem {
 }
 
 const PollsPage: React.FC = () => {
-  // We'll track selected options as an array for each poll item.
+  
   const [selectedOptions, setSelectedOptions] = useState<{ [key: number]: string[] }>({});
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -35,11 +35,11 @@ const PollsPage: React.FC = () => {
     },
   ];
 
-  // Toggle checkbox selection for a given poll and option
+  
   const handleOptionToggle = (pollId: number, optionText: string) => {
     setSelectedOptions((prev) => {
       const currentSelections = prev[pollId] || [];
-      // Toggle: if the option is already selected, remove it; otherwise, add it.
+      
       if (currentSelections.includes(optionText)) {
         return {
           ...prev,
@@ -54,7 +54,7 @@ const PollsPage: React.FC = () => {
     });
   };
 
-  // Create an array of page numbers [1..10]
+  
   const pageNumbers = Array.from({ length: 10 }, (_, i) => i + 1);
 
   return (
@@ -62,11 +62,11 @@ const PollsPage: React.FC = () => {
       className="min-h-screen flex flex-col font-sans"
       style={{ backgroundColor: '#2c2c2c' }}
     >
-      {/* Header */}
+      
       <Navbar />
 
       <div style={{ padding: '2rem' }}>
-        {/* Centered Buttons Above Existing Poll Questions */}
+        
         <div
           style={{
             display: 'flex',
@@ -87,7 +87,7 @@ const PollsPage: React.FC = () => {
               cursor: 'pointer',
             }}
           >
-            search a poll
+            Search A Poll
           </button>
           <button
             onClick={() => (window.location.href = '/create-poll')}
@@ -97,15 +97,15 @@ const PollsPage: React.FC = () => {
               border: 'none',
               borderRadius: '4px',
               color: '#FFF',
-              fontWeight: 'bold',
+              fontWeight: '',
               cursor: 'pointer',
             }}
           >
-            create a poll
+            Create A Poll
           </button>
         </div>
 
-        {/* Existing Poll Options Section */}
+        
         <div style={{ marginTop: '1rem' }}>
           <h2 style={{ textAlign: 'center', marginBottom: '1rem' }}>
             Existing Poll Questions
@@ -113,7 +113,7 @@ const PollsPage: React.FC = () => {
           <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap' }}>
             {pollItems.map((item) => {
               if (item.id === 3) {
-                // For poll item 3, display with a text input.
+                
                 return (
                   <div
                     key={item.id}
@@ -148,7 +148,7 @@ const PollsPage: React.FC = () => {
                   </div>
                 );
               } else {
-                // For poll items 1 and 2, we split the title into a question and options.
+                
                 const parts = item.title.split('\n').filter((part) => part.trim() !== '');
                 const questionText = parts[0];
                 const optionLines = parts.slice(1);
@@ -173,7 +173,7 @@ const PollsPage: React.FC = () => {
                     />
                     <p style={{ marginTop: '1rem', fontWeight: 'bold' }}>{questionText}</p>
                     {optionLines.map((line, idx) => {
-                      // Remove the asterisks for display.
+                      
                       const cleanText = line.replace(/\*\*/g, '');
                       const currentSelections = selectedOptions[item.id] || [];
                       const isSelected = currentSelections.includes(cleanText);
@@ -201,9 +201,9 @@ const PollsPage: React.FC = () => {
                           />
                           <span
                             style={{
-                              fontSize: '14px', // consistent font size
+                              fontSize: '14px', 
                               fontWeight: 'bold',
-                              color: '#FFF', // ensure consistent color
+                              color: '#FFF', 
                               lineHeight: '1.2',
                             }}
                           >
@@ -219,7 +219,7 @@ const PollsPage: React.FC = () => {
           </div>
         </div>
 
-        {/* Pagination Controls */}
+        
         <div style={{ marginTop: '2rem', textAlign: 'center' }}>
           <div style={{ color: '#bbb', marginBottom: '0.5rem' }}>3 polls per page</div>
           <div style={{ display: 'inline-block' }}>
@@ -253,7 +253,7 @@ const PollsPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Footer */}
+      
       <Footer />
     </div>
   );
