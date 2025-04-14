@@ -11,9 +11,9 @@ interface PollItem {
 }
 
 const PollsPage: React.FC = () => {
-  // State to track which options are selected for each poll.
+  
   const [selectedOptions, setSelectedOptions] = useState<{ [key: number]: string[] }>({});
-  // State for pagination current page.
+
   const [currentPage, setCurrentPage] = useState(1);
 
   const pollItems: PollItem[] = [
@@ -36,18 +36,18 @@ const PollsPage: React.FC = () => {
     },
   ];
 
-  // Toggle selection for items 1 & 2 (checkbox options).
+  
   const handleOptionToggle = (pollId: number, optionText: string) => {
     setSelectedOptions((prev) => {
       const currentSelections = prev[pollId] || [];
       if (currentSelections.includes(optionText)) {
-        // If already selected, remove it.
+        
         return {
           ...prev,
           [pollId]: currentSelections.filter((opt) => opt !== optionText),
         };
       } else {
-        // Otherwise, add it.
+        
         return {
           ...prev,
           [pollId]: [...currentSelections, optionText],
@@ -56,21 +56,21 @@ const PollsPage: React.FC = () => {
     });
   };
 
-  // For numeric pagination: [1..10].
+ 
   const pageNumbers = Array.from({ length: 10 }, (_, i) => i + 1);
 
-  // Simple handler for submitting a poll (demo only).
+  
   const handlePollSubmit = (pollId: number) => {
     alert(`Poll #${pollId} submitted. Selected options: ${selectedOptions[pollId]?.join(', ') || 'none'}`);
   };
 
   return (
     <div className="min-h-screen flex flex-col font-sans" style={{ backgroundColor: '#2c2c2c' }}>
-      {/* Header */}
+    
       <Navbar />
 
       <div style={{ padding: '2rem' }}>
-        {/* Centered Buttons Above Existing Poll Questions */}
+       
         <div
           style={{
             display: 'flex',
@@ -107,12 +107,12 @@ const PollsPage: React.FC = () => {
           </button>
         </div>
 
-        {/* Existing Poll Options Section */}
+        
         <div style={{ marginTop: '1rem' }}>
           <h2 style={{ textAlign: 'center', marginBottom: '1rem' }}>Existing Poll Questions</h2>
           <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap' }}>
             {pollItems.map((item) => {
-              // For poll item 3 (text input).
+              
               if (item.id === 3) {
                 return (
                   <div
@@ -125,7 +125,7 @@ const PollsPage: React.FC = () => {
                       textAlign: 'center',
                       boxShadow: '0 4px 6px rgba(0, 0, 0, 0.3)',
 
-                      // Make the container stretch to place Submit at the bottom:
+                      
                       display: 'flex',
                       flexDirection: 'column',
                       justifyContent: 'space-between',
@@ -171,7 +171,7 @@ const PollsPage: React.FC = () => {
                   </div>
                 );
               } else {
-                // For poll items 1 & 2 (checkboxes).
+                
                 const parts = item.title.split('\n').filter((part) => part.trim() !== '');
                 const questionText = parts[0];
                 const optionLines = parts.slice(1);
@@ -188,7 +188,7 @@ const PollsPage: React.FC = () => {
                       textAlign: 'center',
                       boxShadow: '0 4px 6px rgba(0, 0, 0, 0.3)',
 
-                      // Place Submit button at bottom
+                      
                       display: 'flex',
                       flexDirection: 'column',
                       justifyContent: 'space-between',
@@ -264,7 +264,7 @@ const PollsPage: React.FC = () => {
           </div>
         </div>
 
-        {/* Pagination Controls */}
+      
         <div style={{ marginTop: '2rem', textAlign: 'center' }}>
           <div style={{ color: '#bbb', marginBottom: '0.5rem' }}>3 polls per page</div>
           <div style={{ display: 'inline-block' }}>
@@ -298,7 +298,7 @@ const PollsPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Footer */}
+   
       <Footer />
     </div>
   );
