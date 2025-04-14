@@ -13,7 +13,6 @@ interface PollItem {
 const PollsPage: React.FC = () => {
   
   const [selectedOptions, setSelectedOptions] = useState<{ [key: number]: string[] }>({});
- 
   const [currentPage, setCurrentPage] = useState(1);
 
   const pollItems: PollItem[] = [
@@ -36,7 +35,7 @@ const PollsPage: React.FC = () => {
     },
   ];
 
-
+  
   const handleOptionToggle = (pollId: number, optionText: string) => {
     setSelectedOptions((prev) => {
       const currentSelections = prev[pollId] || [];
@@ -60,16 +59,14 @@ const PollsPage: React.FC = () => {
 
   return (
     <div
-    className="min-h-screen flex flex-col font-sans"
-      style={{ backgroundColor: "#2c2c2c"}
-    }
+      className="min-h-screen flex flex-col font-sans"
+      style={{ backgroundColor: '#2c2c2c' }}
     >
-      {/* Header */}
+      
       <Navbar />
 
-    
       <div style={{ padding: '2rem' }}>
-       
+        
         <div
           style={{
             display: 'flex',
@@ -86,11 +83,11 @@ const PollsPage: React.FC = () => {
               border: 'none',
               borderRadius: '4px',
               color: '#FFF',
-              fontWeight: 'bold',
+              fontWeight: '',
               cursor: 'pointer',
             }}
           >
-            search a poll
+            Search A Poll
           </button>
           <button
             onClick={() => (window.location.href = '/create-poll')}
@@ -100,23 +97,23 @@ const PollsPage: React.FC = () => {
               border: 'none',
               borderRadius: '4px',
               color: '#FFF',
-              fontWeight: 'bold',
+              fontWeight: '',
               cursor: 'pointer',
             }}
           >
-            create a poll
+            Create A Poll
           </button>
         </div>
 
-       
+        
         <div style={{ marginTop: '1rem' }}>
           <h2 style={{ textAlign: 'center', marginBottom: '1rem' }}>
             Existing Poll Questions
           </h2>
           <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap' }}>
             {pollItems.map((item) => {
-              
               if (item.id === 3) {
+                
                 return (
                   <div
                     key={item.id}
@@ -155,6 +152,7 @@ const PollsPage: React.FC = () => {
                 const parts = item.title.split('\n').filter((part) => part.trim() !== '');
                 const questionText = parts[0];
                 const optionLines = parts.slice(1);
+
                 return (
                   <div
                     key={item.id}
@@ -175,15 +173,18 @@ const PollsPage: React.FC = () => {
                     />
                     <p style={{ marginTop: '1rem', fontWeight: 'bold' }}>{questionText}</p>
                     {optionLines.map((line, idx) => {
-                      // Remove asterisks for display.
+                      
                       const cleanText = line.replace(/\*\*/g, '');
                       const currentSelections = selectedOptions[item.id] || [];
                       const isSelected = currentSelections.includes(cleanText);
+
                       return (
                         <div
                           key={idx}
                           style={{
-                            display: 'flex',
+                            display: 'grid',
+                            gridTemplateColumns: '20px 1fr',
+                            gap: '0.5rem',
                             alignItems: 'center',
                             margin: '0.5rem 0',
                           }}
@@ -195,11 +196,19 @@ const PollsPage: React.FC = () => {
                             style={{
                               width: '20px',
                               height: '20px',
-                              marginRight: '0.5rem',
                               accentColor: isSelected ? '#2563eb' : undefined,
                             }}
                           />
-                          <span style={{ fontWeight: 'bold' }}>{cleanText}</span>
+                          <span
+                            style={{
+                              fontSize: '14px', 
+                              fontWeight: 'bold',
+                              color: '#FFF', 
+                              lineHeight: '1.2',
+                            }}
+                          >
+                            {cleanText}
+                          </span>
                         </div>
                       );
                     })}
@@ -244,7 +253,7 @@ const PollsPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Footer */}
+      
       <Footer />
     </div>
   );
