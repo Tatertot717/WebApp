@@ -56,7 +56,14 @@ const CreatePage = () => {
     };
 
     console.log("Poll JSON:", pollData);
+
     //MONGODB HERE, maybe need middleware to create options with count
+
+    setPollTitle("");
+    setPollImage("");
+    setOptions(["", ""]);
+    setAllowMultiple(false);
+    setRequireLogin(false);
   };
 
   return (
@@ -98,9 +105,10 @@ const CreatePage = () => {
 
               <div>
                 <Options
-                  count={options.length}
+                  values={options}
                   onChange={handleOptionsChange}
                 />
+
                 {errors.options && (
                   <p className="text-red-500 text-sm mt-1">{errors.options}</p>
                 )}
