@@ -11,8 +11,9 @@ interface PollItem {
 }
 
 const PollsPage: React.FC = () => {
-  
+  // State to track which options are selected for each poll.
   const [selectedOptions, setSelectedOptions] = useState<{ [key: number]: string[] }>({});
+  // State for pagination current page.
   const [currentPage, setCurrentPage] = useState(1);
 
   const pollItems: PollItem[] = [
@@ -35,17 +36,18 @@ const PollsPage: React.FC = () => {
     },
   ];
 
-  
+  // Toggle selection for items 1 & 2 (checkbox options).
   const handleOptionToggle = (pollId: number, optionText: string) => {
     setSelectedOptions((prev) => {
       const currentSelections = prev[pollId] || [];
-      
       if (currentSelections.includes(optionText)) {
+        // If already selected, remove it.
         return {
           ...prev,
           [pollId]: currentSelections.filter((opt) => opt !== optionText),
         };
       } else {
+        // Otherwise, add it.
         return {
           ...prev,
           [pollId]: [...currentSelections, optionText],
@@ -54,19 +56,21 @@ const PollsPage: React.FC = () => {
     });
   };
 
-  
+  // For numeric pagination: [1..10].
   const pageNumbers = Array.from({ length: 10 }, (_, i) => i + 1);
 
+  // Simple handler for submitting a poll (demo only).
+  const handlePollSubmit = (pollId: number) => {
+    alert(`Poll #${pollId} submitted. Selected options: ${selectedOptions[pollId]?.join(', ') || 'none'}`);
+  };
+
   return (
-    <div
-      className="min-h-screen flex flex-col font-sans"
-      style={{ backgroundColor: '#2c2c2c' }}
-    >
-      
+    <div className="min-h-screen flex flex-col font-sans" style={{ backgroundColor: '#2c2c2c' }}>
+      {/* Header */}
       <Navbar />
 
       <div style={{ padding: '2rem' }}>
-        
+        {/* Centered Buttons Above Existing Poll Questions */}
         <div
           style={{
             display: 'flex',
@@ -79,11 +83,10 @@ const PollsPage: React.FC = () => {
             onClick={() => (window.location.href = '/search')}
             style={{
               padding: '0.5rem 1rem',
-              backgroundColor: '#374151', 
+              backgroundColor: '#374151',
               border: 'none',
               borderRadius: '4px',
               color: '#FFF',
-              fontWeight: '',
               cursor: 'pointer',
             }}
           >
@@ -93,11 +96,10 @@ const PollsPage: React.FC = () => {
             onClick={() => (window.location.href = '/create-poll')}
             style={{
               padding: '0.5rem 1rem',
-              backgroundColor: '#374151', 
+              backgroundColor: '#374151',
               border: 'none',
               borderRadius: '4px',
               color: '#FFF',
-              fontWeight: '',
               cursor: 'pointer',
             }}
           >
@@ -105,53 +107,75 @@ const PollsPage: React.FC = () => {
           </button>
         </div>
 
-        
+        {/* Existing Poll Options Section */}
         <div style={{ marginTop: '1rem' }}>
-          <h2 style={{ textAlign: 'center', marginBottom: '1rem' }}>
-            Existing Poll Questions
-          </h2>
+          <h2 style={{ textAlign: 'center', marginBottom: '1rem' }}>Existing Poll Questions</h2>
           <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap' }}>
             {pollItems.map((item) => {
+              // For poll item 3 (text input).
               if (item.id === 3) {
-                
                 return (
                   <div
                     key={item.id}
                     style={{
                       backgroundColor: '#1e1e1e',
                       borderRadius: '8px',
-                      padding: '1rem',
                       margin: '1rem',
                       width: '220px',
                       textAlign: 'center',
                       boxShadow: '0 4px 6px rgba(0, 0, 0, 0.3)',
+
+                      // Make the container stretch to place Submit at the bottom:
+                      display: 'flex',
+                      flexDirection: 'column',
+                      justifyContent: 'space-between',
+                      padding: '1rem',
+                      minHeight: '360px',
                       whiteSpace: 'pre-wrap',
                     }}
                   >
-                    <img
-                      src={item.image}
-                      alt="Poll Question Image"
-                      style={{ width: '100%', height: 'auto', borderRadius: '4px' }}
-                    />
-                    <p style={{ marginTop: '1rem', fontWeight: 'bold' }}>{item.title}</p>
-                    <input
-                      type="text"
-                      placeholder="Type your answer here"
+                    <div>
+                      <img
+                        src={item.image}
+                        alt="Poll Question Image"
+                        style={{ width: '100%', height: 'auto', borderRadius: '4px' }}
+                      />
+                      <p style={{ marginTop: '1rem', fontWeight: 'bold' }}>{item.title}</p>
+                      <input
+                        type="text"
+                        placeholder="Type your answer here"
+                        style={{
+                          width: '100%',
+                          padding: '0.75rem',
+                          borderRadius: '4px',
+                          border: '1px solid #ccc',
+                          marginTop: '0.5rem',
+                        }}
+                      />
+                    </div>
+                    <button
+                      onClick={() => handlePollSubmit(item.id)}
                       style={{
-                        width: '100%',
-                        padding: '0.75rem',
+                        marginTop: '1rem',
+                        padding: '0.5rem 1rem',
+                        backgroundColor: '#374151',
+                        border: 'none',
                         borderRadius: '4px',
-                        border: '1px solid #ccc',
-                        marginTop: '0.5rem',
+                        color: '#FFF',
+                        fontWeight: 'bold',
+                        cursor: 'pointer',
                       }}
-                    />
+                    >
+                      Submit Poll
+                    </button>
                   </div>
                 );
               } else {
-                
+                // For poll items 1 & 2 (checkboxes).
                 const parts = item.title.split('\n').filter((part) => part.trim() !== '');
                 const questionText = parts[0];
                 const optionLines = parts.slice(1);
+                const currentSelections = selectedOptions[item.id] || [];
 
                 return (
                   <div
@@ -159,59 +183,80 @@ const PollsPage: React.FC = () => {
                     style={{
                       backgroundColor: '#1e1e1e',
                       borderRadius: '8px',
-                      padding: '1rem',
                       margin: '1rem',
                       width: '220px',
                       textAlign: 'center',
                       boxShadow: '0 4px 6px rgba(0, 0, 0, 0.3)',
+
+                      // Place Submit button at bottom
+                      display: 'flex',
+                      flexDirection: 'column',
+                      justifyContent: 'space-between',
+                      padding: '1rem',
+                      minHeight: '360px',
                     }}
                   >
-                    <img
-                      src={item.image}
-                      alt="Poll Question Image"
-                      style={{ width: '100%', height: 'auto', borderRadius: '4px' }}
-                    />
-                    <p style={{ marginTop: '1rem', fontWeight: 'bold' }}>{questionText}</p>
-                    {optionLines.map((line, idx) => {
-                      
-                      const cleanText = line.replace(/\*\*/g, '');
-                      const currentSelections = selectedOptions[item.id] || [];
-                      const isSelected = currentSelections.includes(cleanText);
+                    <div>
+                      <img
+                        src={item.image}
+                        alt="Poll Question Image"
+                        style={{ width: '100%', height: 'auto', borderRadius: '4px' }}
+                      />
+                      <p style={{ marginTop: '1rem', fontWeight: 'bold' }}>{questionText}</p>
+                      {optionLines.map((line, idx) => {
+                        const cleanText = line.replace(/\*\*/g, '');
+                        const isSelected = currentSelections.includes(cleanText);
 
-                      return (
-                        <div
-                          key={idx}
-                          style={{
-                            display: 'grid',
-                            gridTemplateColumns: '20px 1fr',
-                            gap: '0.5rem',
-                            alignItems: 'center',
-                            margin: '0.5rem 0',
-                          }}
-                        >
-                          <input
-                            type="checkbox"
-                            checked={isSelected}
-                            onChange={() => handleOptionToggle(item.id, cleanText)}
+                        return (
+                          <div
+                            key={idx}
                             style={{
-                              width: '20px',
-                              height: '20px',
-                              accentColor: isSelected ? '#2563eb' : undefined,
-                            }}
-                          />
-                          <span
-                            style={{
-                              fontSize: '14px', 
-                              fontWeight: 'bold',
-                              color: '#FFF', 
-                              lineHeight: '1.2',
+                              display: 'grid',
+                              gridTemplateColumns: '20px 1fr',
+                              gap: '0.5rem',
+                              alignItems: 'center',
+                              margin: '0.5rem 0',
                             }}
                           >
-                            {cleanText}
-                          </span>
-                        </div>
-                      );
-                    })}
+                            <input
+                              type="checkbox"
+                              checked={isSelected}
+                              onChange={() => handleOptionToggle(item.id, cleanText)}
+                              style={{
+                                width: '20px',
+                                height: '20px',
+                                accentColor: isSelected ? '#2563eb' : undefined,
+                              }}
+                            />
+                            <span
+                              style={{
+                                fontSize: '14px',
+                                fontWeight: 'bold',
+                                color: '#FFF',
+                                lineHeight: '1.2',
+                              }}
+                            >
+                              {cleanText}
+                            </span>
+                          </div>
+                        );
+                      })}
+                    </div>
+                    <button
+                      onClick={() => handlePollSubmit(item.id)}
+                      style={{
+                        marginTop: '1rem',
+                        padding: '0.5rem 1rem',
+                        backgroundColor: '#374151',
+                        border: 'none',
+                        borderRadius: '4px',
+                        color: '#FFF',
+                        fontWeight: 'bold',
+                        cursor: 'pointer',
+                      }}
+                    >
+                      Submit Poll
+                    </button>
                   </div>
                 );
               }
@@ -219,7 +264,7 @@ const PollsPage: React.FC = () => {
           </div>
         </div>
 
-        
+        {/* Pagination Controls */}
         <div style={{ marginTop: '2rem', textAlign: 'center' }}>
           <div style={{ color: '#bbb', marginBottom: '0.5rem' }}>3 polls per page</div>
           <div style={{ display: 'inline-block' }}>
@@ -253,7 +298,7 @@ const PollsPage: React.FC = () => {
         </div>
       </div>
 
-      
+      {/* Footer */}
       <Footer />
     </div>
   );
