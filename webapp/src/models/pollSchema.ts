@@ -5,13 +5,15 @@ interface IPollOption {
   votes: number;
 }
 
-interface IPoll extends Document {
+export interface IPoll extends Document {
   polltitle: string;
   pollImage?: string;
   options: IPollOption[];
   allowmultiple: boolean;
   requirelogin: boolean;
   owner?: mongoose.Types.ObjectId;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 const pollOptionSchema = new Schema<IPollOption>(
@@ -19,7 +21,7 @@ const pollOptionSchema = new Schema<IPollOption>(
     text: { type: String, required: true },
     votes: { type: Number, default: 0 },
   },
-  { _id: false } // prevents nested _id for each option
+  { _id: false } // no _id for each option
 );
 
 const pollSchema = new Schema<IPoll>(
@@ -27,9 +29,11 @@ const pollSchema = new Schema<IPoll>(
     polltitle: {
       type: String,
       required: true,
+      trim: true,
     },
     pollImage: {
       type: String,
+      default: "",
     },
     options: {
       type: [pollOptionSchema],
@@ -56,6 +60,13 @@ const pollSchema = new Schema<IPoll>(
   },
   {
     timestamps: true,
+    toJSON: {
+      transform(doc, ret) {
+        ret.id = ret._id.toString(); // convert Mongo _id to plain id
+        delete ret._id;
+        delete ret.__v;
+      },
+    },
   }
 );
 

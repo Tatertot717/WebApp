@@ -38,7 +38,7 @@ const Poll: React.FC<PollProps> = ({
     >
       <div>
         <img
-          src={pollImage}
+          src={pollImage || "/bigpoll.png"}
           alt="Poll Question Image"
           style={{ width: "100%", height: "auto", borderRadius: "4px" }}
         />

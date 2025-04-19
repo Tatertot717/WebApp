@@ -3,15 +3,25 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "PORT=3000 next dev"
+    "dev:web": "PORT=3000 next dev",
+    "dev:ws": "node ws-server/server.js",
+    "dev": "concurrently \"npm run dev:web\" \"npm run dev:ws\"",
+    "build": "next build",
+    "start:web": "next start -p 3000",
+    "start:ws": "node ws-server/server.js",
+    "start": "concurrently \"npm run start:web\" \"npm run start:ws\""
   },
   "dependencies": {
+    "bcryptjs": "^3.0.2",
     "mongodb": "^6.15.0",
     "mongoose": "^8.13.1",
     "next": "^15.2.4",
+    "next-auth": "^4.24.11",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "react-icons": "^5.5.0"
+    "react-icons": "^5.5.0",
+    "redis": "^4.7.0",
+    "ws": "^8.18.1"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
@@ -19,6 +29,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "concurrently": "^9.1.2",
     "eslint": "^9",
     "eslint-config-next": "15.2.2",
     "tailwindcss": "^4",
