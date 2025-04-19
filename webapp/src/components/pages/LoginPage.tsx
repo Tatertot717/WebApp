@@ -4,7 +4,7 @@ import Navbar from "../Navbar";
 import Footer from "../Footer";
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useAuth } from "@/src/config/Authentication";
+import { signIn } from "next-auth/react";
 
 const LoginPage = () => {
   const searchParams = useSearchParams();
@@ -12,13 +12,11 @@ const LoginPage = () => {
   const tabParam = searchParams.get("tab");
 
   const [isLogin, setIsLogin] = useState(true);
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  const { login } = useAuth();
-
-  // Sync tab param to tab state
   useEffect(() => {
     if (tabParam === "signup") {
       setIsLogin(false);
@@ -27,28 +25,71 @@ const LoginPage = () => {
     }
   }, [tabParam]);
 
-  // Tab switcher that updates both UI + URL
   const handleTabSwitch = (tab: "login" | "signup") => {
     setIsLogin(tab === "login");
     router.push(`/login?tab=${tab}`);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!email || !password || (!isLogin && password !== confirmPassword)) {
-      alert("Please fill out all fields correctly.");
+    if (!email || !password) {
+      alert("Email and password are required.");
       return;
     }
 
-    login();
-    router.push("/");
+    if (!isLogin) {
+      if (!username.trim()) {
+        alert("Username is required.");
+        return;
+      }
+
+      if (password !== confirmPassword) {
+        alert("Passwords do not match.");
+        return;
+      }
+
+      const res = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password, username }),
+      });
+
+      if (res.ok) {
+        const result = await signIn("credentials", {
+          email,
+          password,
+          redirect: false,
+        });
+
+        if (!result?.error) {
+          router.push("/");
+        } else {
+          alert("Login after signup failed.");
+        }
+      } else {
+        const data = await res.json();
+        alert(data.message || "Sign up failed.");
+      }
+    } else {
+      // Regular login
+      const result = await signIn("credentials", {
+        email,
+        password,
+        redirect: false,
+      });
+
+      if (result?.error) {
+        alert("Login failed: " + result.error);
+      } else {
+        router.push("/");
+      }
+    }
   };
 
   return (
     <div className="flex flex-col min-h-screen font-sans text-white">
       <Navbar />
-      {/* background and login card section (same as before) */}
       <div
         className="flex-1 flex items-center justify-center bg-cover bg-center bg-no-repeat relative"
         style={{ backgroundImage: "url('/splashBackground.jpg')" }}
@@ -77,8 +118,17 @@ const LoginPage = () => {
             </button>
           </div>
 
-          {/* Form content stays the same */}
           <form onSubmit={handleSubmit} className="flex flex-col space-y-4">
+            {!isLogin && (
+              <input
+                type="text"
+                placeholder="Username"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                className="p-2 rounded bg-neutral-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            )}
+
             <input
               type="email"
               placeholder="Email"
@@ -104,6 +154,7 @@ const LoginPage = () => {
                 className="p-2 rounded bg-neutral-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             )}
+
             <button
               type="submit"
               className="bg-blue-600 hover:bg-blue-500 py-2 rounded font-semibold"
@@ -113,7 +164,6 @@ const LoginPage = () => {
           </form>
         </div>
       </div>
-
       <Footer />
     </div>
   );

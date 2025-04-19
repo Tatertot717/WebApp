@@ -1,28 +1,46 @@
+// src/components/pages/CreatePage.tsx
 "use client";
+
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 import Options from "../Options";
 import Navbar from "../Navbar";
 import Footer from "../Footer";
+import { useSession } from "next-auth/react";
+import LoginRedirectNotice from "../loginRedirect";
 
 const CreatePage = () => {
+  const router = useRouter();
+  const { data: session, status } = useSession();
+  const isLoggedIn = !!session;
+
   const [pollTitle, setPollTitle] = useState("");
   const [options, setOptions] = useState<string[]>(["", ""]);
   const [allowMultiple, setAllowMultiple] = useState(false);
   const [requireLogin, setRequireLogin] = useState(false);
-  const [errors, setErrors] = useState<{ title?: string; options?: string }>(
-    {}
-  );
+  const [errors, setErrors] = useState<{ title?: string; options?: string }>({});
   const [pollImage, setPollImage] = useState("");
 
-  const handleOptionsChange = (values: string[]) => {
-    setOptions(values);
-  };
+  if (status !== "loading" && !isLoggedIn) {
+    return (
+      <div className="min-h-screen flex flex-col bg-gray-100 font-sans">
+        <Navbar />
+        <main className="flex-grow flex items-center justify-center text-black">
+          <div className="text-center max-w-md px-4">
+            <h1 className="text-2xl font-semibold mb-2">Create a Poll</h1>
+            <p className="mb-4">You must be logged in to create a poll.</p>
+            <LoginRedirectNotice />
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
 
-  const handleAddOption = () => {
-    setOptions((prev) => [...prev, ""]);
-  };
+  const handleOptionsChange = (values: string[]) => setOptions(values);
+  const handleAddOption = () => setOptions((prev) => [...prev, ""]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     const trimmedTitle = pollTitle.trim();
@@ -31,15 +49,8 @@ const CreatePage = () => {
       .filter((opt) => opt !== "");
 
     const Errors: { title?: string; options?: string } = {};
-
-    if (!trimmedTitle) {
-      Errors.title = "Poll title is required.";
-    }
-
-    if (nonBlankOptions.length < 2) {
-      Errors.options = "At least 2 options are required.";
-    }
-
+    if (!trimmedTitle) Errors.title = "Poll title is required.";
+    if (nonBlankOptions.length < 2) Errors.options = "At least 2 options are required.";
     if (Object.keys(Errors).length > 0) {
       setErrors(Errors);
       return;
@@ -53,11 +64,27 @@ const CreatePage = () => {
       options: nonBlankOptions,
       allowmultiple: allowMultiple,
       requirelogin: requireLogin,
+      owner: session?.user?.id,
     };
 
-    console.log("Poll JSON:", pollData);
+    try {
+      const res = await fetch("/api/polls", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(pollData),
+      });
 
-    //MONGODB HERE, maybe need middleware to create options with count
+      if (!res.ok) {
+        const error = await res.json();
+        console.error("Error creating poll:", error);
+        return;
+      }
+
+      const createdPoll = await res.json();
+      router.push(`/poll/${createdPoll.id || createdPoll._id}`);
+    } catch (err) {
+      console.error("Network error creating poll:", err);
+    }
 
     setPollTitle("");
     setPollImage("");
@@ -103,16 +130,11 @@ const CreatePage = () => {
 
               <h3 className="text-lg font-medium mb-2">Poll Options</h3>
 
-              <div>
-                <Options
-                  values={options}
-                  onChange={handleOptionsChange}
-                />
+              <Options values={options} onChange={handleOptionsChange} />
 
-                {errors.options && (
-                  <p className="text-red-500 text-sm mt-1">{errors.options}</p>
-                )}
-              </div>
+              {errors.options && (
+                <p className="text-red-500 text-sm mt-1">{errors.options}</p>
+              )}
 
               <div className="flex justify-center">
                 <button

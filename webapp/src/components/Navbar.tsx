@@ -1,28 +1,33 @@
 "use client";
 import Link from "next/link";
-import { useAuth } from "../config/Authentication";
-import { useRouter } from 'next/navigation';
+import { useRouter } from "next/navigation";
+import { useSession, signOut } from "next-auth/react";
 
 const Navbar = () => {
   const router = useRouter();
-  const { isLoggedIn, logout } = useAuth();
+  const { data: session, status } = useSession();
+
+  const isLoggedIn = !!session;
+  const user = session?.user;
 
   return (
     <header className="w-full flex justify-between items-center px-10 py-4 bg-neutral-900 shadow-md z-20 font-sans">
       <Link href="/">
-        <h1 className="text-2xl font-bold">PollsCheck</h1>
+        <h1 className="text-2xl font-bold text-white">PollsCheck</h1>
       </Link>
-      <div className="space-x-4">
-        {isLoggedIn ? (
-          <button
-            onClick={() => {
-              logout();
-              router.push("/");
-            }}
-            className="bg-red-600 hover:bg-red-500 px-4 py-2 rounded text-sm font-medium"
-          >
-            Logout
-          </button>
+      <div className="flex items-center space-x-4">
+        {isLoggedIn && user ? (
+          <>
+            <span className="text-sm text-gray-300">Hello, {user.name || "User"}</span>
+            <button
+              onClick={() => {
+                signOut({ callbackUrl: "/" });
+              }}
+              className="bg-red-600 hover:bg-red-500 px-4 py-2 rounded text-sm font-medium"
+            >
+              Logout
+            </button>
+          </>
         ) : (
           <>
             <Link href="/login?tab=login">

@@ -1,4 +1,3 @@
-// src/components/pages/SearchPage.tsx
 "use client";
 
 import React, { useState } from "react";
@@ -7,12 +6,14 @@ import Navbar from "../Navbar";
 import Footer from "../Footer";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useAuth } from "@/src/config/Authentication";
+import { useSession } from "next-auth/react";
 
 const SearchPage = () => {
   const [query, setQuery] = useState("");
   const router = useRouter();
-  const { isLoggedIn } = useAuth();
+  const { data: session } = useSession();
+
+  const isLoggedIn = !!session;
 
   const handleSearch = () => {
     if (query.trim()) {
@@ -21,8 +22,6 @@ const SearchPage = () => {
   };
 
   return (
-    
-
     <div className="flex flex-col min-h-screen text-white" style={{ backgroundColor: "#2c2c2c" }}>
       <Navbar />
 
