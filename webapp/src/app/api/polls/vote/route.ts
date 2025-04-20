@@ -3,13 +3,6 @@ import connectMongoDB from "@/src/config/mongodb";
 import Poll from "@/src/models/pollSchema";
 import { getRedisClient } from "@/src/config/redis";
 
-const getVoteDiff = (prev: string[], curr: string[]) => {
-  const added = curr.filter(opt => !prev.includes(opt));
-  const removed = prev.filter(opt => !curr.includes(opt));
-  return { added, removed };
-};
-
-
 export async function POST(req: NextRequest) {
   try {
     await connectMongoDB();

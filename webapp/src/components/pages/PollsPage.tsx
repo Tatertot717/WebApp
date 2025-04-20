@@ -126,7 +126,7 @@ const Polls: React.FC = () => {
             ) : (
               pollItems.map((item) => (
                 <Poll
-                  key={item.id || item._id}
+                  key={item.id}
                   {...item}
                   onViewPoll={handleViewPoll}
                 />

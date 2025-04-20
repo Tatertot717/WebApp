@@ -1,5 +1,6 @@
 //not on figma
 
+import { Suspense } from "react";
 import LoginPage from "@/src/components/pages/LoginPage";
 
 export const metadata = {
@@ -8,6 +9,8 @@ export const metadata = {
 
 export default function Login() {
   return (
-    <LoginPage />
+    <Suspense fallback={<div>Loading login page...</div>}>
+      <LoginPage />
+    </Suspense>
   );
 }

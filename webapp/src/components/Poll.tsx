@@ -1,5 +1,6 @@
 "use client";
 import React from "react";
+import Image from "next/image";
 
 interface PollProps {
   id: number;
@@ -15,9 +16,6 @@ const Poll: React.FC<PollProps> = ({
   id,
   polltitle,
   pollImage,
-  options,
-  allowmultiple,
-  requirelogin,
   onViewPoll,
 }) => {
   return (
@@ -37,11 +35,14 @@ const Poll: React.FC<PollProps> = ({
       }}
     >
       <div>
-        <img
-          src={pollImage || "/bigpoll.png"}
-          alt="Poll Question Image"
-          style={{ width: "100%", height: "auto", borderRadius: "4px" }}
-        />
+        <div style={{ position: "relative", width: "100%", height: "300px" }}>
+          <Image
+            src={pollImage || "/bigpoll.png"}
+            alt="Poll Question Image"
+            fill
+            style={{ objectFit: "contain", borderRadius: "4px" }}
+          />
+        </div>
         <p style={{ marginTop: "1rem", fontWeight: "bold", color: "#FFF" }}>
           {polltitle}
         </p>

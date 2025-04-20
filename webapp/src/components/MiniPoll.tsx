@@ -1,1 +1,0 @@
-//The 2 mini polls on 1st figma view, might need a button to click on for the left poll
