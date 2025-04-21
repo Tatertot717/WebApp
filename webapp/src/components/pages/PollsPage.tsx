@@ -1,99 +1,182 @@
 "use client";
-
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import Poll from "../Poll";
 import Navbar from "../Navbar";
 import Footer from "../Footer";
 
 interface PollItem {
   id: number;
-  image: string;
-  title: string;
+  polltitle: string;
+  pollImage: string;
+  options: string[];
+  allowmultiple: boolean;
+  requirelogin: boolean;
 }
 
-const PollsPage = () => {
-  const pollItems: PollItem[] = [
-    {
-      id: 1,
-      image: "batman.png",
-      title:
-        "Which superhero is your favorite?\n\nOption A: Batman\nOption B: Superman\nOption C: Spider-Man",
-    },
-    {
-      id: 2,
-      image: "spiderman.png",
-      title:
-        "What is your favorite superhero movie?\n\nOption A: The Avengers\nOption B: Spider-Man: Homecoming\nOption C: Black Panther",
-    },
-    {
-      id: 3,
-      image: "strange.png",
-      title:
-        "Which superpower would you choose?\n\nOption A: Flight\nOption B: Superstrength\n",
-    },
-  ];
+const Polls: React.FC = () => {
+  const [pollItems, setPollItems] = useState<PollItem[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+
+  useEffect(() => {
+    const fetchPolls = async () => {
+      try {
+        const res = await fetch("/api/polls");
+        const data = await res.json();
+        console.log("Poll data:", data);
+
+        if (Array.isArray(data)) {
+          setPollItems(data);
+        } else {
+          console.error("Polls response is not an array:", data);
+          setPollItems([]);
+        }
+      } catch (error) {
+        console.error("Failed to fetch polls:", error);
+        setPollItems([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPolls();
+  }, []);
+
+  const handleViewPoll = (pollId: number) => {
+    window.location.href = `/poll/${pollId}`;
+  };
+
+  const pageNumbers = Array.from({ length: 10 }, (_, i) => i + 1);
 
   return (
     <div
-    className="min-h-screen flex flex-col bg-gray-100 font-sans"
-      style={{ backgroundColor: "#2c2c2c", color: "#FFF", minHeight: "100vh" }
-    }
+      className="min-h-screen flex flex-col font-sans"
+      style={{ backgroundColor: "#2c2c2c" }}
     >
-      {/* Header */}
       <Navbar />
 
-      {/* Main Content */}
-      <main className="flex-grow relative">
-        <div style={{ padding: "2rem" }}>
-          {/* Existing Poll Options Section */}
-          <div style={{ marginTop: "3rem" }}>
-            <h2 style={{ textAlign: "center", marginBottom: "1rem" }}>
-              Existing Poll Questions
-            </h2>
-            <div
+      <div style={{ padding: "2rem" }}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            gap: "1rem",
+            marginBottom: "1rem",
+          }}
+        >
+          <button
+            onClick={() => (window.location.href = "/search")}
+            style={{
+              padding: "0.5rem 1rem",
+              backgroundColor: "#374151",
+              border: "none",
+              borderRadius: "4px",
+              color: "#FFF",
+              cursor: "pointer",
+            }}
+          >
+            Search A Poll
+          </button>
+          <button
+            onClick={() => (window.location.href = "/create-poll")}
+            style={{
+              padding: "0.5rem 1rem",
+              backgroundColor: "#374151",
+              border: "none",
+              borderRadius: "4px",
+              color: "#FFF",
+              cursor: "pointer",
+            }}
+          >
+            Create A Poll
+          </button>
+        </div>
+
+        <h2
+          style={{ textAlign: "center", marginBottom: "1rem", color: "#FFF" }}
+        >
+          Existing Poll Questions
+        </h2>
+
+        {loading ? (
+          <div style={{ color: "#FFF", textAlign: "center" }}>
+            Loading polls...
+          </div>
+        ) : (
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              flexWrap: "wrap",
+            }}
+          >
+            {pollItems.length === 0 ? (
+              <div
+                style={{
+                  color: "#FFF",
+                  textAlign: "center",
+                  marginTop: "2rem",
+                }}
+              >
+                No polls found. Be the first to{" "}
+                <a href="/create-poll" style={{ color: "#3b82f6" }}>
+                  create one!
+                </a>
+              </div>
+            ) : (
+              pollItems.map((item) => (
+                <Poll
+                  key={item.id}
+                  {...item}
+                  onViewPoll={handleViewPoll}
+                />
+              ))
+            )}
+          </div>
+        )}
+
+        <div style={{ marginTop: "2rem", textAlign: "center" }}>
+          <div style={{ color: "#bbb", marginBottom: "0.5rem" }}>
+            3 polls per page
+          </div>
+          <div style={{ display: "inline-block" }}>
+            {pageNumbers.map((page) => (
+              <span
+                key={page}
+                onClick={() => setCurrentPage(page)}
+                style={{
+                  margin: "0 0.5rem",
+                  cursor: "pointer",
+                  padding: "0.3rem 0.6rem",
+                  borderRadius: "4px",
+                  backgroundColor:
+                    currentPage === page ? "#2563eb" : "transparent",
+                  color: currentPage === page ? "#FFF" : "#bbb",
+                  fontWeight: currentPage === page ? "bold" : "normal",
+                }}
+              >
+                {page}
+              </span>
+            ))}
+            <span
+              onClick={() =>
+                setCurrentPage(currentPage < 10 ? currentPage + 1 : currentPage)
+              }
               style={{
-                display: "flex",
-                justifyContent: "center",
-                flexWrap: "wrap",
+                margin: "0 0.5rem",
+                cursor: "pointer",
+                color: "#bbb",
               }}
             >
-              {pollItems.map((item: PollItem) => (
-                <div
-                  key={item.id}
-                  style={{
-                    backgroundColor: "#1e1e1e",
-                    borderRadius: "8px",
-                    padding: "1rem",
-                    margin: "1rem",
-                    width: "220px",
-                    textAlign: "center",
-                    boxShadow: "0 4px 6px rgba(0, 0, 0, 0.3)",
-                    whiteSpace: "pre-wrap",
-                  }}
-                >
-                  {/* Image */}
-                  <img
-                    src={item.image}
-                    alt="Poll Question Image"
-                    style={{
-                      width: "100%",
-                      height: "auto",
-                      borderRadius: "4px",
-                    }}
-                  />
-                  {/* Bolded Question and Options */}
-                  <div style={{ marginTop: "0.5rem", fontSize: "0.9rem" }}>
-                    {item.title}
-                  </div>
-                </div>
-              ))}
-            </div>
+              Next
+            </span>
           </div>
         </div>
-        {/* Footer */}
-      </main>
+      </div>
+
       <Footer />
     </div>
   );
 };
 
-export default PollsPage;
+export default Polls;

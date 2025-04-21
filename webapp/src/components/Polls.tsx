@@ -1,1 +1,0 @@
-//represents the list of polls on /polls.

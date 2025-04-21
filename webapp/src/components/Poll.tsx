@@ -1,1 +1,69 @@
-//represents an individual poll element on /polls. Image, poll name, and list of options, with each vote count
+"use client";
+import React from "react";
+import Image from "next/image";
+
+interface PollProps {
+  id: number;
+  polltitle: string;
+  pollImage: string;
+  options: string[];
+  allowmultiple: boolean;
+  requirelogin: boolean;
+  onViewPoll: (pollId: number) => void;
+}
+
+const Poll: React.FC<PollProps> = ({
+  id,
+  polltitle,
+  pollImage,
+  onViewPoll,
+}) => {
+  return (
+    <div
+      style={{
+        backgroundColor: "#1e1e1e",
+        borderRadius: "8px",
+        margin: "1rem",
+        width: "220px",
+        textAlign: "center",
+        boxShadow: "0 4px 6px rgba(0, 0, 0, 0.3)",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-between",
+        padding: "1rem",
+        minHeight: "360px",
+      }}
+    >
+      <div>
+        <div style={{ position: "relative", width: "100%", height: "300px" }}>
+          <Image
+            src={pollImage || "/bigpoll.png"}
+            alt="Poll Question Image"
+            fill
+            style={{ objectFit: "contain", borderRadius: "4px" }}
+          />
+        </div>
+        <p style={{ marginTop: "1rem", fontWeight: "bold", color: "#FFF" }}>
+          {polltitle}
+        </p>
+      </div>
+      <button
+        onClick={() => onViewPoll(id)}
+        style={{
+          marginTop: "1rem",
+          padding: "0.5rem 1rem",
+          backgroundColor: "#374151",
+          border: "none",
+          borderRadius: "4px",
+          color: "#FFF",
+          fontWeight: "bold",
+          cursor: "pointer",
+        }}
+      >
+        View Poll
+      </button>
+    </div>
+  );
+};
+
+export default Poll;
