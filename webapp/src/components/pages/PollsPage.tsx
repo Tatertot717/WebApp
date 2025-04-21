@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import Poll from "../Poll";
 import Navbar from "../Navbar";
 import Footer from "../Footer";
@@ -17,11 +18,23 @@ const Polls: React.FC = () => {
   const [pollItems, setPollItems] = useState<PollItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
+  const searchParams = useSearchParams();
+  const queryParam = searchParams.get("query");
+  const userParam = searchParams.get("user");
 
   useEffect(() => {
     const fetchPolls = async () => {
       try {
-        const res = await fetch("/api/polls");
+        //if query doesn't exist, fetch everything
+        //else, fetch based on query
+        
+        let res = null;
+        if(queryParam == null) {
+          res = await fetch("/api/polls");
+        } else {
+          res = await fetch(`/api/polls?polltitle=${encodeURIComponent(queryParam)}`);
+        }
+        
         const data = await res.json();
         console.log("Poll data:", data);
 

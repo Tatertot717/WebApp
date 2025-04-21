@@ -5,6 +5,7 @@ import Poll from "@/src/models/pollSchema";
 export async function GET() {
   try {
     await connectMongoDB();
+    
     const polls = await Poll.find({});
     return NextResponse.json(polls);
   } catch (err) {
