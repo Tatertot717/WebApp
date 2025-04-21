@@ -2,17 +2,14 @@ import { NextRequest, NextResponse } from "next/server";
 import connectMongoDB from "@/src/config/mongodb";
 import Poll from "@/src/models/pollSchema";
 import { getRedisClient } from "@/src/config/redis";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/src/config/authOptions";
 
 export async function POST(req: NextRequest) {
   try {
     await connectMongoDB();
 
     const { pollId, options, previousOptions = [] } = await req.json();
-
-
-    console.log("pollId:", pollId);
-  console.log("incoming options:", options);
-
 
     if (!pollId || !Array.isArray(options)) {
       return NextResponse.json({ error: "Invalid request" }, { status: 400 });
@@ -23,10 +20,18 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Poll not found" }, { status: 404 });
     }
 
+    //If the poll requires login, check for session
+    if (poll.requirelogin) {
+      const session = await getServerSession({ req, ...authOptions });
+      if (!session) {
+        return NextResponse.json({ error: "You must be logged in to vote." }, { status: 401 });
+      }
+    }
+
     poll.options.forEach((opt) => {
       const wasSelected = previousOptions.includes(opt.text);
       const isSelected = options.includes(opt.text);
-    
+
       if (wasSelected && !isSelected) {
         opt.votes = Math.max(0, opt.votes - 1);
       } else if (!wasSelected && isSelected) {

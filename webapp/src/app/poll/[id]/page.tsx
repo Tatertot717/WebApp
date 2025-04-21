@@ -78,13 +78,17 @@ export default async function VotePage({
               {poll.polltitle}
             </h1>
             {poll.pollImage && (
-              <Image
-                src={poll.pollImage}
-                className="w-full rounded mb-6"
-                alt="Poll banner"
-                fill
-                style={{ objectFit: "contain", borderRadius: "4px" }}
-              />
+              <div
+                style={{ position: "relative", width: "100%", height: "300px" }}
+              >
+                <Image
+                  src={poll.pollImage}
+                  className="w-full rounded mb-6"
+                  alt="Poll banner"
+                  fill
+                  style={{ objectFit: "contain", borderRadius: "4px" }}
+                />
+              </div>
             )}
             <VoteOptions poll={poll} />
           </div>
