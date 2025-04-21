@@ -18,15 +18,20 @@ const CreatePage = () => {
   const [options, setOptions] = useState<string[]>(["", ""]);
   const [allowMultiple, setAllowMultiple] = useState(false);
   const [requireLogin, setRequireLogin] = useState(false);
-  const [errors, setErrors] = useState<{ title?: string; options?: string }>({});
+  const [errors, setErrors] = useState<{ title?: string; options?: string }>(
+    {}
+  );
   const [pollImage, setPollImage] = useState("");
 
   if (status !== "loading" && !isLoggedIn) {
     return (
-      <div className="min-h-screen flex flex-col bg-gray-100 font-sans">
+      <div
+        className="min-h-screen flex flex-col bg-gradient-to-b from-gray-900 to-gray-800 text-white font-sans"
+        style={{ backgroundImage: "url('/splashBackground.jpg')" }}
+      >
         <Navbar />
         <main className="flex-grow flex items-center justify-center text-black">
-          <div className="text-center max-w-md px-4">
+          <div className="bg-white rounded-xl shadow-lg max-w-md w-full px-6 py-8 text-center">
             <h1 className="text-2xl font-semibold mb-2">Create a Poll</h1>
             <p className="mb-4">You must be logged in to create a poll.</p>
             <LoginRedirectNotice />
@@ -50,7 +55,8 @@ const CreatePage = () => {
 
     const Errors: { title?: string; options?: string } = {};
     if (!trimmedTitle) Errors.title = "Poll title is required.";
-    if (nonBlankOptions.length < 2) Errors.options = "At least 2 options are required.";
+    if (nonBlankOptions.length < 2)
+      Errors.options = "At least 2 options are required.";
     if (Object.keys(Errors).length > 0) {
       setErrors(Errors);
       return;
@@ -94,7 +100,8 @@ const CreatePage = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-100 font-sans">
+    <div className="min-h-screen flex flex-col bg-gradient-to-b from-gray-900 to-gray-800 text-white font-sans"
+    style={{ backgroundImage: "url('/splashBackground.jpg')" }}>
       <Navbar />
       <main className="flex-grow relative">
         <div className="flex justify-center items-center py-10 text-black">
