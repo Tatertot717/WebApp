@@ -82,6 +82,8 @@ export default async function VotePage({
                 src={poll.pollImage}
                 className="w-full rounded mb-6"
                 alt="Poll banner"
+                fill
+                style={{ objectFit: "contain", borderRadius: "4px" }}
               />
             )}
             <VoteOptions poll={poll} />
