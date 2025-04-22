@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 import Options from "../Options";
 import Navbar from "../Navbar";
 import Footer from "../Footer";
@@ -13,40 +13,12 @@ const CreatePage = () => {
   const { data: session, status } = useSession();
   const isLoggedIn = !!session;
 
-  // Get the poll ID from the URL query string if present
-  const searchParams = useSearchParams();
-  const pollId = searchParams.get('id');
-
   const [pollTitle, setPollTitle] = useState("");
-  const [options, setOptions] = useState<string[]>(["", ""]);
+  const [options, setOptions] = useState(["", ""]);
   const [allowMultiple, setAllowMultiple] = useState(false);
   const [requireLogin, setRequireLogin] = useState(false);
-  const [errors, setErrors] = useState<{ title?: string; options?: string }>({});
   const [pollImage, setPollImage] = useState("");
-  
-  useEffect(() => {
-    if (pollId) {
-      // Fetch poll data if in edit mode
-      console.log("started useEffect");
-      const fetchPoll = async () => {
-        try {
-          const res = await fetch(`/api/polls/${pollId}`);
-          if (res.ok) {
-            const pollData = await res.json();
-            setPollTitle(pollData.polltitle);
-            setOptions(pollData.options.map((option: { text: string }) => option.text));
-            setPollImage(pollData.pollImage);
-            setAllowMultiple(pollData.allowmultiple);
-            setRequireLogin(pollData.requirelogin);
-          }
-        } catch (err) {
-          console.error("Error fetching poll data:", err);
-        }
-      };
-
-      fetchPoll();
-    }
-  }, [pollId]);
+  const [errors, setErrors] = useState<{ title?: string; options?: string }>({});
 
   if (status !== "loading" && !isLoggedIn) {
     return (
@@ -93,40 +65,23 @@ const CreatePage = () => {
     };
 
     try {
-      let res;
-      if (pollId) {
-        // If in edit mode, send a PUT request to update the poll
-        res = await fetch(`/api/polls/${pollId}`, {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(pollData),
-        });
-      } else {
-        // If in create mode, send a POST request to create the poll
-        res = await fetch("/api/polls", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(pollData),
-        });
-      }
+      const res = await fetch("/api/polls", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(pollData),
+      });
 
       if (!res.ok) {
         const error = await res.json();
-        console.error("Error saving poll:", error);
+        console.error("Error creating poll:", error);
         return;
       }
 
       const savedPoll = await res.json();
       router.push(`/poll/${savedPoll.id || savedPoll._id}`);
     } catch (err) {
-      console.error("Network error saving poll:", err);
+      console.error("Network error:", err);
     }
-
-    setPollTitle("");
-    setPollImage("");
-    setOptions(["", ""]);
-    setAllowMultiple(false);
-    setRequireLogin(false);
   };
 
   return (
@@ -135,37 +90,29 @@ const CreatePage = () => {
       <main className="flex-grow relative">
         <div className="flex justify-center items-center py-10 text-black">
           <div className="w-full max-w-md bg-white p-8 rounded shadow">
-            <h2 className="text-2xl font-semibold mb-6 text-center">
-              {pollId ? "Edit Poll" : "Create A Poll"}
-            </h2>
+            <h2 className="text-2xl font-semibold mb-6 text-center">Create A Poll</h2>
             <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <input
-                  type="text"
-                  value={pollTitle}
-                  onChange={(e) => setPollTitle(e.target.value)}
-                  placeholder="Enter poll question here"
-                  className="w-full p-3 bg-gray-200 rounded focus:outline-none shadow-lg"
-                />
-                {errors.title && <p className="text-red-500 text-sm mt-1">{errors.title}</p>}
-              </div>
+              <input
+                type="text"
+                value={pollTitle}
+                onChange={(e) => setPollTitle(e.target.value)}
+                placeholder="Enter poll question here"
+                className="w-full p-3 bg-gray-200 rounded focus:outline-none shadow-lg"
+              />
+              {errors.title && <p className="text-red-500 text-sm mt-1">{errors.title}</p>}
 
-              <div>
-                <input
-                  type="text"
-                  value={pollImage}
-                  onChange={(e) => setPollImage(e.target.value)}
-                  placeholder="Poll image URL (optional)"
-                  className="border p-2 rounded shadow-lg w-full"
-                />
-              </div>
+              <input
+                type="text"
+                value={pollImage}
+                onChange={(e) => setPollImage(e.target.value)}
+                placeholder="Poll image URL (optional)"
+                className="border p-2 rounded shadow-lg w-full"
+              />
 
               <div className="my-4 border-t border-gray-300" />
 
               <h3 className="text-lg font-medium mb-2">Poll Options</h3>
-
               <Options values={options} onChange={handleOptionsChange} />
-
               {errors.options && <p className="text-red-500 text-sm mt-1">{errors.options}</p>}
 
               <div className="flex justify-center">
@@ -203,7 +150,7 @@ const CreatePage = () => {
 
               <input
                 type="submit"
-                value={pollId ? "Update Poll" : "Create Poll"}
+                value="Create Poll"
                 className="w-full py-3 bg-gray-300 text-gray-700 rounded text-lg cursor-pointer hover:bg-gray-400 transition shadow"
               />
             </form>
