@@ -112,7 +112,7 @@ export default async function VotePage({
             {isOwner && (
               <div className="mt-6 text-center">
                 <Link
-                  href={`/create-poll?id=${poll.id}`}
+                  href={`/poll/${poll.id}/edit`}
                   className="text-blue-600 hover:text-blue-800 font-semibold"
                 >
                   Edit Poll
@@ -135,7 +135,6 @@ export default async function VotePage({
               </div>
             )}
 
-            {/* QR Code placeholder */}
             {/* QR Code */}
             <Image
               src={`http://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(

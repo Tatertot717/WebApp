@@ -102,10 +102,27 @@ export async function PUT(req: NextRequest) {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
-    const body = await req.json();
-    const updatedPoll = await Poll.findByIdAndUpdate(pollId, body, {
-      new: true,
-    });
+    const { polltitle, pollImage, options, allowmultiple, requirelogin } =
+      await req.json();
+
+    const updatedOptions = options.map((text: string) => ({
+      text,
+      votes: 0, // or retain existing vote count if you want to fetch it first
+    }));
+
+    const updatedPoll = await Poll.findByIdAndUpdate(
+      pollId,
+      {
+        polltitle,
+        pollImage,
+        options: updatedOptions,
+        allowmultiple,
+        requirelogin,
+      },
+      {
+        new: true,
+      }
+    );
 
     if (!updatedPoll) {
       return NextResponse.json({ error: "Poll not found" }, { status: 404 });
