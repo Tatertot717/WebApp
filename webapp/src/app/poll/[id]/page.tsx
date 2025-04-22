@@ -38,7 +38,10 @@ export default async function VotePage({
 
   if (requiresAuth && !session) {
     return (
-      <div className="min-h-screen flex flex-col bg-gray-100 text-black">
+      <div
+        className="min-h-screen flex flex-col bg-gray-100 text-white"
+        style={{ backgroundColor: "#2c2c2c" }}
+      >
         <Navbar />
         <main className="flex-grow flex justify-center items-center p-4">
           <div className="max-w-lg text-center">
@@ -77,7 +80,10 @@ export default async function VotePage({
 
   return (
     <VoteProvider>
-      <div className="min-h-screen flex flex-col bg-gray-100 text-black">
+      <div
+        className="min-h-screen flex flex-col bg-gray-100 text-white"
+        style={{ backgroundColor: "#2c2c2c" }}
+      >
         <Navbar />
 
         {/* Title */}
