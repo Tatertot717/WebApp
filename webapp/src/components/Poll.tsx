@@ -10,6 +10,9 @@ interface PollProps {
   allowmultiple: boolean;
   requirelogin: boolean;
   onViewPoll: (pollId: number) => void;
+  ownerId?: string;            
+  currentUserId?: string;      
+  onDelete?: () => void;    
 }
 
 const Poll: React.FC<PollProps> = ({
@@ -17,7 +20,12 @@ const Poll: React.FC<PollProps> = ({
   polltitle,
   pollImage,
   onViewPoll,
+  ownerId,
+  currentUserId,
+  onDelete,
 }) => {
+  const isOwner = !!ownerId && ownerId === currentUserId;
+
   return (
     <div
       style={{
@@ -47,21 +55,43 @@ const Poll: React.FC<PollProps> = ({
           {polltitle}
         </p>
       </div>
-      <button
-        onClick={() => onViewPoll(id)}
-        style={{
-          marginTop: "1rem",
-          padding: "0.5rem 1rem",
-          backgroundColor: "#374151",
-          border: "none",
-          borderRadius: "4px",
-          color: "#FFF",
-          fontWeight: "bold",
-          cursor: "pointer",
-        }}
-      >
-        View Poll
-      </button>
+
+      <div>
+        <button
+          onClick={() => onViewPoll(id)}
+          style={{
+            marginTop: "1rem",
+            padding: "0.5rem 1rem",
+            backgroundColor: "#374151",
+            border: "none",
+            borderRadius: "4px",
+            color: "#FFF",
+            fontWeight: "bold",
+            cursor: "pointer",
+          }}
+        >
+          View Poll
+        </button>
+
+        {isOwner && onDelete && (
+          <button
+            onClick={() => onDelete()}
+            style={{
+              marginTop: "0.5rem",
+              padding: "0.5rem 1rem",
+              backgroundColor: "#b91c1c",
+              border: "none",
+              borderRadius: "4px",
+              color: "#FFF",
+              fontWeight: "bold",
+              cursor: "pointer",
+              marginLeft: "0.5rem",
+            }}
+          >
+            Delete
+          </button>
+        )}
+      </div>
     </div>
   );
 };
