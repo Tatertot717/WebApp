@@ -26,7 +26,10 @@ export async function GET(req: Request) {
     return NextResponse.json(polls);
   } catch (err) {
     console.error("API /polls error:", err);
-    return NextResponse.json({ error: "Failed to fetch polls" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Failed to fetch polls" },
+      { status: 500 }
+    );
   }
 }
 
@@ -65,7 +68,10 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(newPoll, { status: 201 });
   } catch (error) {
     console.error("Error creating poll:", error);
-    return NextResponse.json({ error: "Failed to create poll" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Failed to create poll" },
+      { status: 500 }
+    );
   }
 }
 
@@ -75,12 +81,31 @@ export async function PUT(req: NextRequest) {
     const { searchParams } = req.nextUrl;
     const pollId = searchParams.get("id");
 
+    const session = await getServerSession(authOptions);
+    if (!session) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+    const userId = session.user.id;
+
+    // get poll ID
+    const url = new URL(req.url);
     if (!pollId) {
-      return NextResponse.json({ error: "Poll ID is required" }, { status: 400 });
+      return NextResponse.json({ error: "Poll id missing" }, { status: 400 });
+    }
+
+    // verify ownership
+    const poll = await Poll.findById(pollId);
+    if (!poll) {
+      return NextResponse.json({ error: "Poll not found" }, { status: 404 });
+    }
+    if (poll.owner?.toString() !== userId) {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
     const body = await req.json();
-    const updatedPoll = await Poll.findByIdAndUpdate(pollId, body, { new: true });
+    const updatedPoll = await Poll.findByIdAndUpdate(pollId, body, {
+      new: true,
+    });
 
     if (!updatedPoll) {
       return NextResponse.json({ error: "Poll not found" }, { status: 404 });
@@ -125,6 +150,9 @@ export async function DELETE(req: NextRequest) {
     return NextResponse.json({ success: true });
   } catch (err) {
     console.error("Error deleting poll:", err);
-    return NextResponse.json({ error: "Failed to delete poll" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Failed to delete poll" },
+      { status: 500 }
+    );
   }
 }
