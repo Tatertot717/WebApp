@@ -96,7 +96,7 @@ export default async function VotePage({
             {isOwner && (
               <div className="mt-6 text-center">
                 <Link
-                  href={`/create?id=${poll.id}`}
+                  href={`/create-poll?id=${poll.id}`}
                   className="text-blue-600 hover:text-blue-800 font-semibold"
                 >
                   Edit Poll
