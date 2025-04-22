@@ -11,6 +11,9 @@ import { authOptions } from "@/src/config/authOptions";
 import LoginRedirectNotice from "@/src/components/loginRedirect";
 import Image from "next/image";
 import Link from "next/link";
+import { HiArrowLeft } from "react-icons/hi";
+
+const baseUrl = process.env.NEXT_PUBLIC_DOMAIN || "http://localhost:3000";
 
 export const metadata = {
   title: "PollsCheck - Poll",
@@ -74,25 +77,38 @@ export default async function VotePage({
 
   return (
     <VoteProvider>
-      <div className="min-h-screen flex flex-col bg-gray-100">
+      <div className="min-h-screen flex flex-col bg-gray-100 text-black">
         <Navbar />
-        <main className="flex-grow py-10 px-4 text-black flex justify-center">
-          <div className="w-full max-w-2xl">
-            <h1 className="text-2xl font-bold mb-4 text-center">{poll.polltitle}</h1>
-            {poll.pollImage && (
-              <div style={{ position: "relative", width: "100%", height: "300px" }}>
-                <Image
-                  src={poll.pollImage}
-                  className="w-full rounded mb-6"
-                  alt="Poll banner"
-                  fill
-                  style={{ objectFit: "contain", borderRadius: "4px" }}
-                />
-              </div>
-            )}
+
+        {/* Title */}
+        <div className="py-6 px-4 grid grid-cols-3 items-center text-center">
+          {/* Back Button on the Left */}
+          <div className="justify-self-start">
+            <Link
+              href="/polls"
+              className="text-blue-600 hover:text-blue-800 font-semibold text-base flex items-center gap-1"
+            >
+              <HiArrowLeft className="text-lg" />
+              Back to Polls
+            </Link>
+          </div>
+
+          {/* Centered Title */}
+          <h1 className="text-3xl lg:text-4xl font-bold col-start-2">
+            {poll.polltitle}
+          </h1>
+
+          {/* Empty space on the right to balance the grid */}
+          <div className="justify-self-end" />
+        </div>
+
+        {/* Main content layout */}
+        <main className="flex flex-col-reverse lg:flex-row flex-grow px-4 pb-10 gap-8 justify-center items-start max-w-7xl mx-auto w-full">
+          {/* Poll Section */}
+          <div className="w-full lg:w-1/2">
             <VoteOptions poll={poll} />
 
-            {/* Display the Edit button if the user is the owner */}
+            {/* Edit Button for Owner */}
             {isOwner && (
               <div className="mt-6 text-center">
                 <Link
@@ -104,7 +120,34 @@ export default async function VotePage({
               </div>
             )}
           </div>
+
+          {/* Images Section */}
+          <div className="w-full lg:w-1/2 flex flex-col items-center gap-6">
+            {/* Poll Image */}
+            {poll.pollImage && (
+              <div className="relative w-full h-64 max-w-md mx-auto">
+                <Image
+                  src={poll.pollImage}
+                  alt="Poll banner"
+                  fill
+                  className="object-contain rounded"
+                />
+              </div>
+            )}
+
+            {/* QR Code placeholder */}
+            {/* QR Code */}
+            <Image
+              src={`http://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(
+                `${baseUrl}/poll/${poll.id}`
+              )}&size=200x200`}
+              alt="QR Code"
+              width={200}
+              height={200}
+            />
+          </div>
         </main>
+
         <Footer />
       </div>
     </VoteProvider>
