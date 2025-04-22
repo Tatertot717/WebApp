@@ -20,6 +20,7 @@ const VoteOptions: React.FC<{ poll: PollType }> = ({ poll }) => {
   const { getVote, setVote } = useVote();
   const [selected, setSelected] = useState<string[]>([]);
   const [options, setOptions] = useState<PollOption[]>(poll.options);
+  const totalVotes = options.reduce((acc, opt) => acc + opt.votes, 0);
 
   useEffect(() => {
     const stored = getVote(poll.id);
@@ -43,7 +44,7 @@ const VoteOptions: React.FC<{ poll: PollType }> = ({ poll }) => {
 
   const toggleOption = async (option: string) => {
     const previous = [...selected];
-  
+
     let updated;
     if (poll.allowmultiple) {
       updated = selected.includes(option)
@@ -52,10 +53,10 @@ const VoteOptions: React.FC<{ poll: PollType }> = ({ poll }) => {
     } else {
       updated = [option];
     }
-  
+
     setSelected(updated);
     setVote(poll.id, updated);
-  
+
     await fetch(`/api/polls/vote`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -66,29 +67,45 @@ const VoteOptions: React.FC<{ poll: PollType }> = ({ poll }) => {
       }),
     });
   };
-  
-  
-  
 
   return (
     <div className="w-full flex justify-center">
       <div className="w-full md:w-1/2 space-y-4">
         {options.map((opt, index) => {
           const isSelected = selected.includes(opt.text);
+          const percentage =
+            totalVotes > 0 ? (opt.votes / totalVotes) * 100 : 0;
+
           return (
             <div
               key={index}
               onClick={() => toggleOption(opt.text)}
-              className={`cursor-pointer flex items-center justify-between p-4 rounded shadow transition ${
-                isSelected
-                  ? "bg-blue-600 text-white"
-                  : "bg-white text-gray-900 hover:bg-gray-100"
+              className={`relative cursor-pointer p-4 shadow-md transition-colors duration-300 bg-white hover:bg-gray-100 rounded-md overflow-hidden ${
+                isSelected ? "border-4 border-gray-700" : ""
               }`}
             >
-              <span className="text-lg font-medium">{opt.text}</span>
-              <span className="text-sm font-semibold">
-                {opt.votes} {opt.votes === 1 ? "vote" : "votes"}
-              </span>
+              {/* Selected Background (Gray) */}
+              {isSelected && (
+                <div className="absolute top-0 left-0 h-full w-full bg-gray-700 z-0"></div>
+              )}
+
+              {/* Vote Percentage Overlay (Blue) */}
+              <div
+                className="absolute top-0 left-0 h-full bg-blue-600 z-10 transition-all duration-700 ease-in-out"
+                style={{ width: `${percentage}%` }}
+              ></div>
+
+              {/* Foreground Content */}
+              <div
+                className={`relative z-20 flex items-center justify-between transition-colors duration-300 ${
+                  isSelected || percentage > 90 ? "text-white" : "text-black"
+                }`}
+              >
+                <span className="text-lg font-medium">{opt.text}</span>
+                <span className="text-sm font-semibold">
+                  {opt.votes} {opt.votes === 1 ? "vote" : "votes"}
+                </span>
+              </div>
             </div>
           );
         })}
