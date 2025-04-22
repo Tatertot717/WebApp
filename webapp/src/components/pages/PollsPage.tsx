@@ -30,12 +30,15 @@ const Polls: React.FC = () => {
   useEffect(() => {
     const fetchPolls = async () => {
       try {
-        const res = queryParam
-          ? await fetch(
-              `/api/polls?polltitle=${encodeURIComponent(queryParam)}`
-            )
-          : await fetch("/api/polls");
+        let url = "/api/polls";
 
+        if (queryParam) {
+          url += `?polltitle=${encodeURIComponent(queryParam)}`;
+        } else if (userParam) {
+          url += `?owner=${encodeURIComponent(userParam)}`;
+        }
+
+        const res = await fetch(url);
         const data = await res.json();
         setPollItems(Array.isArray(data) ? data : []);
       } catch (error) {
@@ -47,7 +50,7 @@ const Polls: React.FC = () => {
     };
 
     fetchPolls();
-  }, [queryParam]);
+  }, [queryParam, userParam]);
 
   const handleViewPoll = (pollId: number) => {
     window.location.href = `/poll/${pollId}`;

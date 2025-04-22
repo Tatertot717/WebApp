@@ -10,19 +10,21 @@ export async function GET(req: Request) {
   try {
     await connectMongoDB();
 
-    const { searchParams } = new URL(req.url);
-    const title = searchParams.get("polltitle");
+    const url = new URL(req.url ?? "", `http://${req.headers.get("host")}`);
+    const title = url.searchParams.get("polltitle");
+    const owner = url.searchParams.get("owner");
 
-    let polls;
+    const query: any = {};
 
     if (title) {
-      polls = await Poll.find({
-        polltitle: { $regex: title, $options: "i" }, // partial, case-insensitive match
-      });
-    } else {
-      polls = await Poll.find(); // return all polls if no query
+      query.polltitle = { $regex: title, $options: "i" };
     }
 
+    if (owner) {
+      query.owner = owner;
+    }
+
+    const polls = await Poll.find(query);
     return NextResponse.json(polls);
   } catch (err) {
     console.error("API /polls error:", err);
