@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Options from "../Options";
 import Navbar from "../Navbar";
 import Footer from "../Footer";
@@ -12,9 +12,10 @@ const CreatePage = () => {
   const router = useRouter();
   const { data: session, status } = useSession();
   const isLoggedIn = !!session;
-  
+
   // Get the poll ID from the URL query string if present
-  const pollId = new URLSearchParams(window.location.search).get('id');
+  const searchParams = useSearchParams();
+  const pollId = searchParams.get('id');
 
   const [pollTitle, setPollTitle] = useState("");
   const [options, setOptions] = useState<string[]>(["", ""]);
@@ -26,6 +27,7 @@ const CreatePage = () => {
   useEffect(() => {
     if (pollId) {
       // Fetch poll data if in edit mode
+      console.log("started useEffect");
       const fetchPoll = async () => {
         try {
           const res = await fetch(`/api/polls/${pollId}`);
