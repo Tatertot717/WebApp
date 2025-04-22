@@ -61,3 +61,32 @@ export async function POST(req: NextRequest) {
     );
   }
 }
+
+export async function PUT(req: NextRequest) {
+  try {
+    await connectMongoDB();
+
+    const { searchParams } = req.nextUrl;
+    const pollId = searchParams.get('id'); // Get the 'id' query parameter
+
+    if (!pollId) {
+      return NextResponse.json({ error: "Poll ID is required" }, { status: 400 });
+    }
+
+    const body = await req.json();
+    const updatedPoll = await Poll.findByIdAndUpdate(pollId, body, { new: true });
+
+    if (!updatedPoll) {
+      return NextResponse.json({ error: "Poll not found" }, { status: 404 });
+    }
+
+    return NextResponse.json(updatedPoll);
+  } catch (error) {
+    console.error("Error editing poll:", error);
+    return NextResponse.json(
+      { error: "Failed to edit poll" },
+      { status: 500 }
+    );
+  }
+}
+
