@@ -6,10 +6,23 @@ import Poll from "@/src/models/pollSchema";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/src/config/authOptions";
 
-export async function GET() {
+export async function GET(req: Request) {
   try {
     await connectMongoDB();
-    const polls = await Poll.find({});
+
+    const { searchParams } = new URL(req.url);
+    const title = searchParams.get("polltitle");
+
+    let polls;
+
+    if (title) {
+      polls = await Poll.find({
+        polltitle: { $regex: title, $options: "i" }, // partial, case-insensitive match
+      });
+    } else {
+      polls = await Poll.find(); // return all polls if no query
+    }
+
     return NextResponse.json(polls);
   } catch (err) {
     console.error("API /polls error:", err);

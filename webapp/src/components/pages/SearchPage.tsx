@@ -16,10 +16,15 @@ const SearchPage = () => {
   const isLoggedIn = !!session;
 
   const handleSearch = () => {
-    if (query.trim()) {
-      router.push(`/polls?query=${encodeURIComponent(query)}`);
+    const trimmed = query.trim();
+  
+    if (trimmed.length > 0) {
+      router.push(`/polls?query=${encodeURIComponent(trimmed)}`);
+    } else {
+      router.push("/polls");  // show all polls if search is empty
     }
   };
+  
 
   return (
     <div className="flex flex-col min-h-screen text-white" style={{ backgroundColor: "#2c2c2c" }}>
