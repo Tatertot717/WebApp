@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 import connectMongoDB from "@/src/config/mongodb";
 import Poll from "@/src/models/pollSchema";
 import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/src/config/authOptions";  
+import { authOptions } from "@/src/config/authOptions";
 
 export async function GET() {
   try {
@@ -28,9 +28,9 @@ export async function POST(req: NextRequest) {
     }
     const userId = session.user.id;
 
-  
     const { polltitle, pollImage, options, allowmultiple, requirelogin } =
       await req.json();
+
     if (!polltitle || !options || options.length < 2) {
       return NextResponse.json(
         { error: "Poll must have a title and at least two options." },
@@ -38,10 +38,8 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    
     const pollOptions = options.map((text: string) => ({ text, votes: 0 }));
 
-    
     const newPoll = await Poll.create({
       polltitle,
       pollImage,
@@ -63,14 +61,18 @@ export async function PUT(req: NextRequest) {
     await connectMongoDB();
     const { searchParams } = req.nextUrl;
     const pollId = searchParams.get("id");
+
     if (!pollId) {
       return NextResponse.json({ error: "Poll ID is required" }, { status: 400 });
     }
+
     const body = await req.json();
     const updatedPoll = await Poll.findByIdAndUpdate(pollId, body, { new: true });
+
     if (!updatedPoll) {
       return NextResponse.json({ error: "Poll not found" }, { status: 404 });
     }
+
     return NextResponse.json(updatedPoll);
   } catch (error) {
     console.error("Error editing poll:", error);
@@ -113,32 +115,3 @@ export async function DELETE(req: NextRequest) {
     return NextResponse.json({ error: "Failed to delete poll" }, { status: 500 });
   }
 }
-
-export async function PUT(req: NextRequest) {
-  try {
-    await connectMongoDB();
-
-    const { searchParams } = req.nextUrl;
-    const pollId = searchParams.get('id'); // Get the 'id' query parameter
-
-    if (!pollId) {
-      return NextResponse.json({ error: "Poll ID is required" }, { status: 400 });
-    }
-
-    const body = await req.json();
-    const updatedPoll = await Poll.findByIdAndUpdate(pollId, body, { new: true });
-
-    if (!updatedPoll) {
-      return NextResponse.json({ error: "Poll not found" }, { status: 404 });
-    }
-
-    return NextResponse.json(updatedPoll);
-  } catch (error) {
-    console.error("Error editing poll:", error);
-    return NextResponse.json(
-      { error: "Failed to edit poll" },
-      { status: 500 }
-    );
-  }
-}
-
