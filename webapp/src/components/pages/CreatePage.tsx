@@ -1,7 +1,6 @@
-// src/components/pages/CreatePage.tsx
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Options from "../Options";
 import Navbar from "../Navbar";
@@ -13,22 +12,43 @@ const CreatePage = () => {
   const router = useRouter();
   const { data: session, status } = useSession();
   const isLoggedIn = !!session;
+  
+  // Get the poll ID from the URL query string if present
+  const pollId = new URLSearchParams(window.location.search).get('id');
 
   const [pollTitle, setPollTitle] = useState("");
   const [options, setOptions] = useState<string[]>(["", ""]);
   const [allowMultiple, setAllowMultiple] = useState(false);
   const [requireLogin, setRequireLogin] = useState(false);
-  const [errors, setErrors] = useState<{ title?: string; options?: string }>(
-    {}
-  );
+  const [errors, setErrors] = useState<{ title?: string; options?: string }>({});
   const [pollImage, setPollImage] = useState("");
+  
+  useEffect(() => {
+    if (pollId) {
+      // Fetch poll data if in edit mode
+      const fetchPoll = async () => {
+        try {
+          const res = await fetch(`/api/polls/${pollId}`);
+          if (res.ok) {
+            const pollData = await res.json();
+            setPollTitle(pollData.polltitle);
+            setOptions(pollData.options.map((option: { text: string }) => option.text));
+            setPollImage(pollData.pollImage);
+            setAllowMultiple(pollData.allowmultiple);
+            setRequireLogin(pollData.requirelogin);
+          }
+        } catch (err) {
+          console.error("Error fetching poll data:", err);
+        }
+      };
+
+      fetchPoll();
+    }
+  }, [pollId]);
 
   if (status !== "loading" && !isLoggedIn) {
     return (
-      <div
-        className="min-h-screen flex flex-col bg-gradient-to-b from-gray-900 to-gray-800 text-white font-sans"
-        style={{ backgroundImage: "url('/splashBackground.jpg')" }}
-      >
+      <div className="min-h-screen flex flex-col bg-gradient-to-b from-gray-900 to-gray-800 text-white font-sans" style={{ backgroundImage: "url('/splashBackground.jpg')" }}>
         <Navbar />
         <main className="flex-grow flex items-center justify-center text-black">
           <div className="bg-white rounded-xl shadow-lg max-w-md w-full px-6 py-8 text-center">
@@ -49,14 +69,11 @@ const CreatePage = () => {
     e.preventDefault();
 
     const trimmedTitle = pollTitle.trim();
-    const nonBlankOptions = options
-      .map((opt) => opt.trim())
-      .filter((opt) => opt !== "");
+    const nonBlankOptions = options.map((opt) => opt.trim()).filter((opt) => opt !== "");
 
     const Errors: { title?: string; options?: string } = {};
     if (!trimmedTitle) Errors.title = "Poll title is required.";
-    if (nonBlankOptions.length < 2)
-      Errors.options = "At least 2 options are required.";
+    if (nonBlankOptions.length < 2) Errors.options = "At least 2 options are required.";
     if (Object.keys(Errors).length > 0) {
       setErrors(Errors);
       return;
@@ -74,22 +91,33 @@ const CreatePage = () => {
     };
 
     try {
-      const res = await fetch("/api/polls", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(pollData),
-      });
+      let res;
+      if (pollId) {
+        // If in edit mode, send a PUT request to update the poll
+        res = await fetch(`/api/polls/${pollId}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(pollData),
+        });
+      } else {
+        // If in create mode, send a POST request to create the poll
+        res = await fetch("/api/polls", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(pollData),
+        });
+      }
 
       if (!res.ok) {
         const error = await res.json();
-        console.error("Error creating poll:", error);
+        console.error("Error saving poll:", error);
         return;
       }
 
-      const createdPoll = await res.json();
-      router.push(`/poll/${createdPoll.id || createdPoll._id}`);
+      const savedPoll = await res.json();
+      router.push(`/poll/${savedPoll.id || savedPoll._id}`);
     } catch (err) {
-      console.error("Network error creating poll:", err);
+      console.error("Network error saving poll:", err);
     }
 
     setPollTitle("");
@@ -100,14 +128,13 @@ const CreatePage = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-b from-gray-900 to-gray-800 text-white font-sans"
-    style={{ backgroundImage: "url('/splashBackground.jpg')" }}>
+    <div className="min-h-screen flex flex-col bg-gradient-to-b from-gray-900 to-gray-800 text-white font-sans" style={{ backgroundImage: "url('/splashBackground.jpg')" }}>
       <Navbar />
       <main className="flex-grow relative">
         <div className="flex justify-center items-center py-10 text-black">
           <div className="w-full max-w-md bg-white p-8 rounded shadow">
             <h2 className="text-2xl font-semibold mb-6 text-center">
-              Create A Poll
+              {pollId ? "Edit Poll" : "Create A Poll"}
             </h2>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
@@ -118,9 +145,7 @@ const CreatePage = () => {
                   placeholder="Enter poll question here"
                   className="w-full p-3 bg-gray-200 rounded focus:outline-none shadow-lg"
                 />
-                {errors.title && (
-                  <p className="text-red-500 text-sm mt-1">{errors.title}</p>
-                )}
+                {errors.title && <p className="text-red-500 text-sm mt-1">{errors.title}</p>}
               </div>
 
               <div>
@@ -139,9 +164,7 @@ const CreatePage = () => {
 
               <Options values={options} onChange={handleOptionsChange} />
 
-              {errors.options && (
-                <p className="text-red-500 text-sm mt-1">{errors.options}</p>
-              )}
+              {errors.options && <p className="text-red-500 text-sm mt-1">{errors.options}</p>}
 
               <div className="flex justify-center">
                 <button
@@ -162,9 +185,7 @@ const CreatePage = () => {
                   onChange={(e) => setAllowMultiple(e.target.checked)}
                   className="h-4 w-4"
                 />
-                <label htmlFor="multichoice" className="text-sm">
-                  Allow multiple choices
-                </label>
+                <label htmlFor="multichoice" className="text-sm">Allow multiple choices</label>
               </div>
 
               <div className="flex items-center space-x-2">
@@ -175,14 +196,12 @@ const CreatePage = () => {
                   onChange={(e) => setRequireLogin(e.target.checked)}
                   className="h-4 w-4"
                 />
-                <label htmlFor="loginreq" className="text-sm">
-                  Require login to vote
-                </label>
+                <label htmlFor="loginreq" className="text-sm">Require login to vote</label>
               </div>
 
               <input
                 type="submit"
-                value="Create Poll"
+                value={pollId ? "Update Poll" : "Create Poll"}
                 className="w-full py-3 bg-gray-300 text-gray-700 rounded text-lg cursor-pointer hover:bg-gray-400 transition shadow"
               />
             </form>

@@ -10,6 +10,7 @@ import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/src/config/authOptions";
 import LoginRedirectNotice from "@/src/components/loginRedirect";
 import Image from "next/image";
+import Link from "next/link";
 
 export const metadata = {
   title: "PollsCheck - Poll",
@@ -68,19 +69,18 @@ export default async function VotePage({
     updatedAt: pollDoc.updatedAt?.toISOString() || null,
   };
 
+  // Render the Edit button if the logged-in user is the owner of the poll
+  const isOwner = session?.user?.id === poll.owner;
+
   return (
     <VoteProvider>
       <div className="min-h-screen flex flex-col bg-gray-100">
         <Navbar />
         <main className="flex-grow py-10 px-4 text-black flex justify-center">
           <div className="w-full max-w-2xl">
-            <h1 className="text-2xl font-bold mb-4 text-center">
-              {poll.polltitle}
-            </h1>
+            <h1 className="text-2xl font-bold mb-4 text-center">{poll.polltitle}</h1>
             {poll.pollImage && (
-              <div
-                style={{ position: "relative", width: "100%", height: "300px" }}
-              >
+              <div style={{ position: "relative", width: "100%", height: "300px" }}>
                 <Image
                   src={poll.pollImage}
                   className="w-full rounded mb-6"
@@ -91,6 +91,18 @@ export default async function VotePage({
               </div>
             )}
             <VoteOptions poll={poll} />
+
+            {/* Display the Edit button if the user is the owner */}
+            {isOwner && (
+              <div className="mt-6 text-center">
+                <Link
+                  href={`/create?id=${poll.id}`}
+                  className="text-blue-600 hover:text-blue-800 font-semibold"
+                >
+                  Edit Poll
+                </Link>
+              </div>
+            )}
           </div>
         </main>
         <Footer />
