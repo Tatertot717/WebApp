@@ -17,17 +17,19 @@ const SearchPage = () => {
 
   const handleSearch = () => {
     const trimmed = query.trim();
-  
+
     if (trimmed.length > 0) {
       router.push(`/polls?query=${encodeURIComponent(trimmed)}`);
     } else {
-      router.push("/polls");  // show all polls if search is empty
+      router.push("/polls"); // show all polls if search is empty
     }
   };
-  
 
   return (
-    <div className="flex flex-col min-h-screen text-white" style={{ backgroundColor: "#2c2c2c" }}>
+    <div
+      className="flex flex-col min-h-screen text-white"
+      style={{ backgroundColor: "#2c2c2c" }}
+    >
       <Navbar />
 
       <main className="flex flex-1 items-center justify-center">
@@ -47,13 +49,13 @@ const SearchPage = () => {
             </button>
           </div>
 
-          {isLoggedIn && (
-            <Link
-              href="/polls?user=current"
+          {isLoggedIn && session?.user?.id && (
+            <button
+              onClick={() => router.push(`/polls?user=${session.user.id}`)}
               className="text-blue-400 underline hover:text-blue-600 transition duration-200"
             >
-              <p>My polls</p>
-            </Link>
+              My polls
+            </button>
           )}
         </div>
       </main>
