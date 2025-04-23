@@ -103,7 +103,7 @@ const LoginPage = () => {
     <div className="flex flex-col min-h-screen font-sans text-white">
       <Navbar />
       <div
-        className="flex-1 flex items-center justify-center bg-cover bg-center bg-no-repeat relative"
+        className="flex-1 flex items-center justify-center bg-cover bg-center bg-no-repeat relative h-screen bg-cover bg-center"
         style={{ backgroundImage: "url('/splashBackground.jpg')" }}
       >
         <div className="bg-neutral-900 bg-opacity-90 p-8 rounded-lg shadow-lg w-96 relative z-10">

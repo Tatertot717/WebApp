@@ -26,7 +26,7 @@ const SearchPage = () => {
 
   return (
     <div
-      className="flex flex-col min-h-screen text-whiteclassName bg-cover bg-center bg-no-repeat relative"
+      className="flex flex-col min-h-screen text-whiteclassName bg-cover bg-center bg-no-repeat relative h-screen bg-cover bg-center"
         style={{ backgroundImage: "url('/splashBackground.jpg')" }}
     >
       <Navbar/>

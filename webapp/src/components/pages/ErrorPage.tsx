@@ -3,7 +3,7 @@ import Footer from "../Footer";
 const ErrorPage = () => {
   return (
     <div
-      className="min-h-screen flex flex-col bg-gradient-to-b from-gray-900 to-gray-800 text-white font-sans"
+      className="min-h-screen flex flex-col bg-gradient-to-b from-gray-900 to-gray-800 text-white font-sans h-screen bg-cover bg-center"
       style={{ backgroundImage: "url('/splashBackground.jpg')" }}
     >
       <Navbar />
