@@ -38,7 +38,10 @@ export default async function VotePage({
 
   if (requiresAuth && !session) {
     return (
-      <div className="min-h-screen flex flex-col bg-gray-100 text-black">
+      <div
+        className="min-h-screen flex flex-col bg-gray-100 text-white"
+        style={{ backgroundColor: "#2c2c2c" }}
+      >
         <Navbar />
         <main className="flex-grow flex justify-center items-center p-4">
           <div className="max-w-lg text-center">
@@ -77,7 +80,10 @@ export default async function VotePage({
 
   return (
     <VoteProvider>
-      <div className="min-h-screen flex flex-col bg-gray-100 text-black">
+      <div
+        className="min-h-screen flex flex-col bg-gray-100 text-white"
+        style={{ backgroundColor: "#2c2c2c" }}
+      >
         <Navbar />
 
         {/* Title */}
@@ -112,7 +118,7 @@ export default async function VotePage({
             {isOwner && (
               <div className="mt-6 text-center">
                 <Link
-                  href={`/create-poll?id=${poll.id}`}
+                  href={`/poll/${poll.id}/edit`}
                   className="text-blue-600 hover:text-blue-800 font-semibold"
                 >
                   Edit Poll
@@ -135,12 +141,11 @@ export default async function VotePage({
               </div>
             )}
 
-            {/* QR Code placeholder */}
             {/* QR Code */}
             <Image
               src={`http://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(
                 `${baseUrl}/poll/${poll.id}`
-              )}&size=200x200`}
+              )}&size=200x200&bgcolor=2c2c2c&color=ffffff`}
               alt="QR Code"
               width={200}
               height={200}

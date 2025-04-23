@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useSession } from "next-auth/react"; // ← added
+import { useSession } from "next-auth/react";
 import Poll from "../Poll";
 import Navbar from "../Navbar";
 import Footer from "../Footer";
@@ -13,7 +13,7 @@ interface PollItem {
   options: string[];
   allowmultiple: boolean;
   requirelogin: boolean;
-  owner: string; // ← added
+  owner: string;
 }
 
 const Polls: React.FC = () => {
@@ -24,11 +24,18 @@ const Polls: React.FC = () => {
   const queryParam = searchParams.get("query");
   const userParam = searchParams.get("user");
 
-  const { data: session } = useSession(); // ← added
-  const currentUserId = session?.user?.id; // ← added
+  const { data: session } = useSession();
+  const currentUserId = session?.user?.id;
+
+  const pollsPerPage = 5;
+  const startIndex = (currentPage - 1) * pollsPerPage;
+  const paginatedPolls = pollItems.slice(startIndex, startIndex + pollsPerPage);
+  const totalPages = Math.ceil(pollItems.length / pollsPerPage);
+  const pageNumbers = Array.from({ length: totalPages }, (_, i) => i + 1);
 
   useEffect(() => {
     const fetchPolls = async () => {
+      setCurrentPage(1);
       try {
         let url = "/api/polls";
 
@@ -56,7 +63,6 @@ const Polls: React.FC = () => {
     window.location.href = `/poll/${pollId}`;
   };
 
-  // ─── added delete handler ─────────────────────────────
   const handleDelete = async (pollId: number) => {
     const res = await fetch(`/api/polls?id=${pollId}`, { method: "DELETE" });
     if (res.ok) {
@@ -65,9 +71,6 @@ const Polls: React.FC = () => {
       console.error("Failed to delete poll");
     }
   };
-  // ───────────────────────────────────────────────────────
-
-  const pageNumbers = Array.from({ length: 10 }, (_, i) => i + 1);
 
   return (
     <div
@@ -145,7 +148,7 @@ const Polls: React.FC = () => {
                 </a>
               </div>
             ) : (
-              pollItems.map((item) => (
+              paginatedPolls.map((item) => (
                 <Poll
                   key={item.id}
                   id={item.id}
@@ -154,10 +157,10 @@ const Polls: React.FC = () => {
                   options={item.options}
                   allowmultiple={item.allowmultiple}
                   requirelogin={item.requirelogin}
-                  ownerId={item.owner} // ← added
-                  currentUserId={currentUserId} // ← added
+                  ownerId={item.owner}
+                  currentUserId={currentUserId}
                   onViewPoll={handleViewPoll}
-                  onDelete={() => handleDelete(item.id)} // ← added
+                  onDelete={() => handleDelete(item.id)}
                 />
               ))
             )}
@@ -166,9 +169,21 @@ const Polls: React.FC = () => {
 
         <div style={{ marginTop: "2rem", textAlign: "center" }}>
           <div style={{ color: "#bbb", marginBottom: "0.5rem" }}>
-            3 polls per page
+            5 polls per page
           </div>
           <div style={{ display: "inline-block" }}>
+            <span
+              onClick={() =>
+                setCurrentPage((prev) => (prev > 1 ? prev - 1 : prev))
+              }
+              style={{
+                margin: "0 0.5rem",
+                cursor: currentPage > 1 ? "pointer" : "not-allowed",
+                color: "#bbb",
+              }}
+            >
+              Previous
+            </span>
             {pageNumbers.map((page) => (
               <span
                 key={page}
@@ -189,9 +204,13 @@ const Polls: React.FC = () => {
             ))}
             <span
               onClick={() =>
-                setCurrentPage(currentPage < 10 ? currentPage + 1 : currentPage)
+                setCurrentPage((prev) => (prev < totalPages ? prev + 1 : prev))
               }
-              style={{ margin: "0 0.5rem", cursor: "pointer", color: "#bbb" }}
+              style={{
+                margin: "0 0.5rem",
+                cursor: currentPage < totalPages ? "pointer" : "not-allowed",
+                color: "#bbb",
+              }}
             >
               Next
             </span>

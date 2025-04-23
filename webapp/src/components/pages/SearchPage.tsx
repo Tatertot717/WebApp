@@ -27,10 +27,10 @@ const SearchPage = () => {
 
   return (
     <div
-      className="flex flex-col min-h-screen text-white"
-      style={{ backgroundColor: "#2c2c2c" }}
+      className="flex flex-col min-h-screen text-whiteclassName bg-cover bg-center bg-no-repeat relative"
+        style={{ backgroundImage: "url('/splashBackground.jpg')" }}
     >
-      <Navbar />
+      <Navbar/>
 
       <main className="flex flex-1 items-center justify-center">
         <div className="flex flex-col items-center space-y-4">
