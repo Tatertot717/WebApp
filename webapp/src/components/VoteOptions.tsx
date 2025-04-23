@@ -70,7 +70,7 @@ const VoteOptions: React.FC<{ poll: PollType }> = ({ poll }) => {
 
   return (
     <div className="w-full flex justify-center">
-      <div className="w-full md:w-1/2 space-y-4">
+      <div className="w-full md:w-1/2 space-y-4 border border-neutral-900 rounded-lg p-4 shadow-md bg-neutral-900">
         {options.map((opt, index) => {
           const isSelected = selected.includes(opt.text);
           const percentage =
@@ -80,7 +80,7 @@ const VoteOptions: React.FC<{ poll: PollType }> = ({ poll }) => {
             <div
               key={index}
               onClick={() => toggleOption(opt.text)}
-              className={`relative cursor-pointer p-4 shadow-md transition-colors duration-300 bg-white hover:bg-gray-100 rounded-md overflow-hidden ${
+              className={`relative cursor-pointer p-4 shadow shadow-grey transition-colors duration-300 bg-white hover:bg-grey-100 rounded-md overflow-hidden ${
                 isSelected ? "border-4 border-gray-700" : ""
               }`}
             >

@@ -109,7 +109,7 @@ export default async function VotePage({
         </div>
 
         {/* Main content layout */}
-        <main className="flex flex-col-reverse lg:flex-row flex-grow px-4 pb-10 gap-8 justify-center items-start max-w-7xl mx-auto w-full">
+        <main className="flex flex-col-reverse lg:flex-row flex-grow px-4 pb-10 gap-8 justify-center items-start max-w-7xl mx-auto w-full ">
           {/* Poll Section */}
           <div className="w-full lg:w-1/2">
             <VoteOptions poll={poll} />
@@ -145,10 +145,10 @@ export default async function VotePage({
             <Image
               src={`http://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(
                 `${baseUrl}/poll/${poll.id}`
-              )}&size=200x200&bgcolor=2c2c2c&color=ffffff`}
+              )}&size=300x300&bgcolor=2c2c2c&color=ffffff`}
               alt="QR Code"
-              width={200}
-              height={200}
+              width={300}
+              height={300}
             />
           </div>
         </main>
