@@ -16,6 +16,7 @@ const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [errors, setErrors] = useState<{ creds?: string; username?: string; matchpass?: string; loginafter?: string; signin?: string; login?: string }>({});
 
   useEffect(() => {
     if (tabParam === "signup") {
@@ -28,26 +29,32 @@ const LoginPage = () => {
   const handleTabSwitch = (tab: "login" | "signup") => {
     setIsLogin(tab === "login");
     router.push(`/login?tab=${tab}`);
+    setErrors({});
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    const Errors: { creds?: string; username?: string; matchpass?: string; loginafter?: string; signin?: string; login?: string } = {};
+
     if (!email || !password) {
-      alert("Email and password are required.");
-      return;
+      Errors.creds = "Email and password are required.";
     }
 
     if (!isLogin) {
       if (!username.trim()) {
-        alert("Username is required.");
-        return;
+        Errors.username = "Username is required.";
       }
 
       if (password !== confirmPassword) {
-        alert("Passwords do not match.");
+        Errors.matchpass = "Passwords do not match.";
+      }
+
+      if (Object.keys(Errors).length > 0) {
+        setErrors(Errors);
         return;
       }
+      setErrors({});
 
       const res = await fetch("/api/auth/register", {
         method: "POST",
@@ -65,11 +72,11 @@ const LoginPage = () => {
         if (!result?.error) {
           router.push("/");
         } else {
-          alert("Login after signup failed.");
+          Errors.loginafter = "Login after signup failed.";
         }
       } else {
         const data = await res.json();
-        alert(data.message || "Sign up failed.");
+        Errors.signin = data.message || "Sign up failed.";
       }
     } else {
       // Regular login
@@ -80,11 +87,16 @@ const LoginPage = () => {
       });
 
       if (result?.error) {
-        alert("Login failed: " + result.error);
+        Errors.login = "Login failed: " + result.error;
       } else {
         router.push("/");
       }
     }
+    if (Object.keys(Errors).length > 0) {
+      setErrors(Errors);
+      return;
+    }
+    setErrors({});
   };
 
   return (
@@ -128,7 +140,7 @@ const LoginPage = () => {
                 className="p-2 rounded bg-neutral-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             )}
-
+            {errors.username && <p className="text-red-500 text-sm mt-1">{errors.username}</p>}
             <input
               type="email"
               placeholder="Email"
@@ -136,7 +148,7 @@ const LoginPage = () => {
               onChange={(e) => setEmail(e.target.value)}
               className="p-2 rounded bg-neutral-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
-
+            
             <input
               type="password"
               placeholder="Password"
@@ -144,6 +156,7 @@ const LoginPage = () => {
               onChange={(e) => setPassword(e.target.value)}
               className="p-2 rounded bg-neutral-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
+            {errors.creds && <p className="text-red-500 text-sm mt-1">{errors.creds}</p>}
 
             {!isLogin && (
               <input
@@ -154,6 +167,7 @@ const LoginPage = () => {
                 className="p-2 rounded bg-neutral-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             )}
+            {errors.matchpass && <p className="text-red-500 text-sm mt-1">{errors.matchpass}</p>}
 
             <button
               type="submit"
@@ -162,6 +176,9 @@ const LoginPage = () => {
               {isLogin ? "Login" : "Sign Up"}
             </button>
           </form>
+          {errors.signin && <p className="text-red-500 text-sm mt-1">{errors.signin}</p>}
+          {errors.loginafter && <p className="text-red-500 text-sm mt-1">{errors.loginafter}</p>}
+          {errors.login && <p className="text-red-500 text-sm mt-1">{errors.login}</p>}
         </div>
       </div>
       <Footer />
