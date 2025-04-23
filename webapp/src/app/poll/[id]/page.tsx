@@ -145,7 +145,7 @@ export default async function VotePage({
             <Image
               src={`http://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(
                 `${baseUrl}/poll/${poll.id}`
-              )}&size=200x200`}
+              )}&size=200x200&bgcolor=2c2c2c&color=ffffff`}
               alt="QR Code"
               width={200}
               height={200}
