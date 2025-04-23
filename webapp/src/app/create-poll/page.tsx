@@ -6,7 +6,7 @@ export const metadata = {
   title: "PollsCheck - Create a Poll",
 };
 
-export default function Search() {
+export default function CreateP() {
   return (
     <CreatePage />
   );
