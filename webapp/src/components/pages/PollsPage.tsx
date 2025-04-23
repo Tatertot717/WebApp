@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { useSession } from "next-auth/react";
 import Poll from "../Poll";
 import Navbar from "../Navbar";
@@ -140,7 +140,7 @@ const Polls: React.FC = () => {
                   color: "#FFF",
                   textAlign: "center",
                   marginTop: "0rem",
-                  marginBottom: "0rem"
+                  marginBottom: "0rem",
                 }}
               >
                 No polls found. Be the first to{" "}

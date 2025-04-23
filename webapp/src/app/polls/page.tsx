@@ -1,7 +1,7 @@
 //not on figma
 
 import PollsPage from "@/src/components/pages/PollsPage";
-
+import { Suspense } from "react";
 
 export const metadata = {
   title: "PollsCheck - Polls",
@@ -9,6 +9,8 @@ export const metadata = {
 
 export default function Search() {
   return (
-    <PollsPage />
+    <Suspense fallback={<div>Loading polls...</div>}>
+      <PollsPage />
+    </Suspense>
   );
 }

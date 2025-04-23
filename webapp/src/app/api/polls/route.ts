@@ -5,6 +5,8 @@ import connectMongoDB from "@/src/config/mongodb";
 import Poll from "@/src/models/pollSchema";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/src/config/authOptions";
+import { FilterQuery } from "mongoose";
+import { IPoll } from "@/src/models/pollSchema";
 
 export async function GET(req: Request) {
   try {
@@ -14,7 +16,7 @@ export async function GET(req: Request) {
     const title = url.searchParams.get("polltitle");
     const owner = url.searchParams.get("owner");
 
-    const query: any = {};
+    const query: FilterQuery<IPoll> = {};
 
     if (title) {
       query.polltitle = { $regex: title, $options: "i" };
@@ -90,7 +92,6 @@ export async function PUT(req: NextRequest) {
     const userId = session.user.id;
 
     // get poll ID
-    const url = new URL(req.url);
     if (!pollId) {
       return NextResponse.json({ error: "Poll id missing" }, { status: 400 });
     }

@@ -7,6 +7,7 @@ import { authOptions } from "@/src/config/authOptions";
 import { getServerSession } from "next-auth";
 import mongoose from "mongoose";
 import EditPollPage from "@/src/components/pages/EditPage";
+import { IPollOption } from "@/src/models/pollSchema";
 
 export default async function EditPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -33,7 +34,7 @@ export default async function EditPage({ params }: { params: Promise<{ id: strin
     id: pollDoc._id.toString(),
     polltitle: pollDoc.polltitle,
     pollImage: pollDoc.pollImage || "",
-    options: pollDoc.options.map((opt: any) => opt.text),
+    options:  pollDoc.options.map((opt: IPollOption) => opt.text),
     allowmultiple: pollDoc.allowmultiple,
     requirelogin: pollDoc.requirelogin,
   };

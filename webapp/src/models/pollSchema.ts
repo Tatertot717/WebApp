@@ -1,6 +1,6 @@
 import mongoose, { Schema, Document, Model } from "mongoose";
 
-interface IPollOption {
+export interface IPollOption {
   text: string;
   votes: number;
 }

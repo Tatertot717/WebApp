@@ -12,6 +12,7 @@ import LoginRedirectNotice from "@/src/components/loginRedirect";
 import Image from "next/image";
 import Link from "next/link";
 import { HiArrowLeft } from "react-icons/hi";
+import { Suspense } from "react";
 
 const baseUrl = process.env.NEXT_PUBLIC_DOMAIN || "http://localhost:3000";
 
@@ -114,7 +115,11 @@ export default async function VotePage({
           <div className="bg-neutral-900 rounded-2xl p-6 shadow-lg flex flex-col-reverse lg:flex-row gap-8 items-start w-full max-w-4xl lg:w-3/5">
             {/* Poll Section */}
             <div className="w-full lg:w-1/2 min-w-[400px]">
-              <VoteOptions poll={poll} />
+              <Suspense
+                fallback={<div className="text-white">Loading poll...</div>}
+              >
+                <VoteOptions poll={poll} />
+              </Suspense>
 
               {isOwner && (
                 <div className="mt-6 text-center">
