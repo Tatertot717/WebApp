@@ -3,7 +3,7 @@ const { createClient } = require("redis");
 const { handleSocketConnection, setWSS, broadcastUpdate } = require("./socket");
 
 // Setup WebSocket server
-const wss = new WebSocket.Server({ port: 3001 });
+const wss = new WebSocket.Server({ port: 3001, path: "/ws" });
 setWSS(wss);
 wss.on("connection", handleSocketConnection);
 console.log("WebSocket server running on ws://localhost:3001");

@@ -28,7 +28,7 @@ const VoteOptions: React.FC<{ poll: PollType }> = ({ poll }) => {
   }, [poll.id, getVote]);
 
   useEffect(() => {
-    const socket = new WebSocket(`ws://${window.location.hostname}:3001`);
+    const socket = new WebSocket("wss://poll.tatejsmith.com/ws");
     socket.onopen = () => {
       console.log("Connected to WS server");
       socket.send(JSON.stringify({ type: "subscribe", pollId: poll.id }));

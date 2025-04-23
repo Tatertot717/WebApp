@@ -16,4 +16,4 @@ WORKDIR /home/
 EXPOSE 3000
 
 # Start MongoDB in the background and then Node.js app
-CMD ["bash", "-c", "[ -d /home/db ] || mkdir /home/db && mongod --bind_ip 127.0.0.1 --dbpath /home/db --fork --logpath /var/log/mongodb.log && cd webapp && npm install && npm run dev"]
+CMD ["bash", "-c", "[ -d /home/db ] || mkdir /home/db && mongod --bind_ip 127.0.0.1 --dbpath /home/db --fork --logpath /var/log/mongodb.log && cd webapp && npm install && npm run build && npm run start"]
