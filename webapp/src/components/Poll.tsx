@@ -10,9 +10,9 @@ interface PollProps {
   allowmultiple: boolean;
   requirelogin: boolean;
   onViewPoll: (pollId: number) => void;
-  ownerId?: string;            
-  currentUserId?: string;      
-  onDelete?: () => void;    
+  ownerId?: string;
+  currentUserId?: string;
+  onDelete?: () => void;
 }
 
 const Poll: React.FC<PollProps> = ({
@@ -33,30 +33,45 @@ const Poll: React.FC<PollProps> = ({
         borderRadius: "8px",
         margin: "1rem",
         width: "220px",
-        textAlign: "center",
         boxShadow: "0 4px 6px rgba(0, 0, 0, 0.3)",
         display: "flex",
         flexDirection: "column",
-        justifyContent: "space-between",
         padding: "1rem",
-        minHeight: "360px",
+        height: "100%", // ensures consistent card height
       }}
     >
-      <div>
-        <div style={{ position: "relative", width: "100%", height: "300px" }}>
+      <div style={{ flex: 1 }}>
+        <div
+          style={{
+            position: "relative",
+            width: "100%",
+            height: "180px",
+            overflow: "hidden",
+            borderRadius: "4px",
+          }}
+        >
           <Image
             src={pollImage || "/bigpoll.png"}
             alt="Poll Question Image"
             fill
-            style={{ objectFit: "contain", borderRadius: "4px" }}
+            style={{ objectFit: "cover" }}
           />
         </div>
-        <p style={{ marginTop: "1rem", fontWeight: "bold", color: "#FFF" }}>
+        <p
+          style={{
+            marginTop: "1rem",
+            fontWeight: "bold",
+            color: "#FFF",
+            fontSize: "0.95rem",
+            textAlign: "center",
+            minHeight: "48px", // to prevent bounce with short/long titles
+          }}
+        >
           {polltitle}
         </p>
       </div>
 
-      <div>
+      <div style={{ marginTop: "auto", textAlign: "center" }}>
         <button
           onClick={() => onViewPoll(id)}
           style={{
@@ -68,6 +83,7 @@ const Poll: React.FC<PollProps> = ({
             color: "#FFF",
             fontWeight: "bold",
             cursor: "pointer",
+            width: "100%",
           }}
         >
           View Poll
@@ -85,7 +101,7 @@ const Poll: React.FC<PollProps> = ({
               color: "#FFF",
               fontWeight: "bold",
               cursor: "pointer",
-              marginLeft: "0.5rem",
+              width: "100%",
             }}
           >
             Delete

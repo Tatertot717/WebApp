@@ -79,7 +79,7 @@ const Polls: React.FC = () => {
     >
       <Navbar />
 
-      <div style={{ padding: "2rem" }}>
+      <div className="flex-1" style={{ padding: "1rem" }}>
         <div
           style={{
             display: "flex",
@@ -104,7 +104,7 @@ const Polls: React.FC = () => {
           <button
             onClick={() => (window.location.href = "/create-poll")}
             style={{
-              padding: "0.5rem 1rem",
+              padding: "0.5rem 0.5rem",
               backgroundColor: "#374151",
               border: "none",
               borderRadius: "4px",
@@ -139,7 +139,8 @@ const Polls: React.FC = () => {
                 style={{
                   color: "#FFF",
                   textAlign: "center",
-                  marginTop: "2rem",
+                  marginTop: "0rem",
+                  marginBottom: "0rem"
                 }}
               >
                 No polls found. Be the first to{" "}
@@ -168,9 +169,9 @@ const Polls: React.FC = () => {
         )}
 
         <div style={{ marginTop: "2rem", textAlign: "center" }}>
-          <div style={{ color: "#bbb", marginBottom: "0.5rem" }}>
+          {/*<div style={{ color: "#bbb", marginBottom: "0.5rem" }}>
             5 polls per page
-          </div>
+          </div>*/}
           <div style={{ display: "inline-block" }}>
             <span
               onClick={() =>
@@ -191,7 +192,7 @@ const Polls: React.FC = () => {
                 style={{
                   margin: "0 0.5rem",
                   cursor: "pointer",
-                  padding: "0.3rem 0.6rem",
+                  padding: "0.3rem 0.3rem",
                   borderRadius: "4px",
                   backgroundColor:
                     currentPage === page ? "#2563eb" : "transparent",

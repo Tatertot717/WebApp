@@ -109,50 +109,49 @@ export default async function VotePage({
         </div>
 
         {/* Main content layout */}
-        <main className="flex flex-col-reverse lg:flex-row flex-grow px-4 pb-10 gap-8 justify-center items-start max-w-7xl mx-auto w-full ">
-          {/* Poll Section */}
-          <div className="w-full lg:w-1/2">
-            <VoteOptions poll={poll} />
+        <main className="flex justify-center px-4 pb-10 flex-grow">
+          {/* Wrapper for box */}
+          <div className="bg-neutral-900 rounded-2xl p-6 shadow-lg flex flex-col-reverse lg:flex-row gap-8 items-start w-full max-w-4xl lg:w-3/5">
+            {/* Poll Section */}
+            <div className="w-full lg:w-1/2 min-w-[400px]">
+              <VoteOptions poll={poll} />
 
-            {/* Edit Button for Owner */}
-            {isOwner && (
-              <div className="mt-6 text-center">
-                <Link
-                  href={`/poll/${poll.id}/edit`}
-                  className="text-blue-600 hover:text-blue-800 font-semibold"
-                >
-                  Edit Poll
-                </Link>
-              </div>
-            )}
-          </div>
+              {isOwner && (
+                <div className="mt-6 text-center">
+                  <Link
+                    href={`/poll/${poll.id}/edit`}
+                    className="text-blue-600 hover:text-blue-800 font-semibold"
+                  >
+                    Edit Poll
+                  </Link>
+                </div>
+              )}
+            </div>
 
-          {/* Images Section */}
-          <div className="w-full lg:w-1/2 flex flex-col items-center gap-6">
-            {/* Poll Image */}
-            {poll.pollImage && (
-              <div className="relative w-full h-64 max-w-md mx-auto">
-                <Image
-                  src={poll.pollImage}
-                  alt="Poll banner"
-                  fill
-                  className="object-contain rounded"
-                />
-              </div>
-            )}
+            {/* Images Section */}
+            <div className="w-full lg:w-1/2 flex flex-col items-center gap-6">
+              {poll.pollImage && (
+                <div className="relative w-full h-64 max-w-md mx-auto">
+                  <Image
+                    src={poll.pollImage}
+                    alt="Poll banner"
+                    fill
+                    className="object-contain rounded"
+                  />
+                </div>
+              )}
 
-            {/* QR Code */}
-            <Image
-              src={`http://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(
-                `${baseUrl}/poll/${poll.id}`
-              )}&size=300x300&bgcolor=2c2c2c&color=ffffff`}
-              alt="QR Code"
-              width={300}
-              height={300}
-            />
+              <Image
+                src={`http://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(
+                  `${baseUrl}/poll/${poll.id}`
+                )}&size=300x300&bgcolor=171717&color=ffffff`}
+                alt="QR Code"
+                width={300}
+                height={300}
+              />
+            </div>
           </div>
         </main>
-
         <Footer />
       </div>
     </VoteProvider>
