@@ -22,7 +22,7 @@ const CreatePage = () => {
 
   if (status !== "loading" && !isLoggedIn) {
     return (
-      <div className="min-h-screen flex flex-col bg-gradient-to-b from-gray-900 to-gray-800 text-white font-sans" style={{ backgroundImage: "url('/splashBackground.jpg')" }}>
+      <div className="min-h-screen flex flex-col bg-gradient-to-b from-gray-900 to-gray-800 text-white font-sans h-screen bg-cover bg-center" style={{ backgroundImage: "url('/splashBackground.jpg')" }}>
         <Navbar />
         <main className="flex-grow flex items-center justify-center text-black">
           <div className="bg-white rounded-xl shadow-lg max-w-md w-full px-6 py-8 text-center">
